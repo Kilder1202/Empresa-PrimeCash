@@ -67,6 +67,11 @@
 .secureTag{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(32,233,138,.42);background:rgba(32,233,138,.11);color:#a7ffd0;border-radius:999px;padding:7px 10px;font-weight:900;font-size:12px;margin:4px}
 @media(max-width:800px){.bankPixGrid{grid-template-columns:1fr}.bankPixPreview img{width:185px;height:185px}}
 
+
+/* Prime Cash - edição de data do empréstimo */
+.loanDateInfo{margin-top:10px;display:grid;gap:8px}
+.loanDateInfo span{display:block;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px;font-size:13px;font-weight:800;color:#dff0ff}
+.dateBtn{background:linear-gradient(135deg,#0f5132,#20e98a)!important;color:#03150d!important}
 </style>
 </head>
 <body>
@@ -95,6 +100,7 @@
 <div id="signupModal" class="modal hidden"><div class="modalBox glass"><h2>Solicitar cadastro</h2><p>O administrador precisa aprovar seu acesso.</p><label>Nome</label><input id="suName"><label>E-mail</label><input id="suEmail"><label>Usuário</label><input id="suUser"><label>Senha</label><input id="suPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('suPass')">👁 Mostrar/Ocultar senha</button><button class="btn full green" onclick="signup()">Enviar para aprovação</button><button class="btn full red" onclick="closeModal('signupModal')">Cancelar</button></div></div>
 <div id="recoveryModal" class="modal hidden"><div class="modalBox glass"><h2>Recuperar senha</h2><p>Digite o e-mail ou usuário cadastrado. Para o administrador, o sistema restaura uma senha temporária segura no aparelho e tenta atualizar no Supabase.</p><label>Usuário ou e-mail</label><input id="recUser" placeholder="Ex: admin@primecash.local ou seu e-mail"><button class="btn full" onclick="recoverPassword()">Recuperar senha</button><button class="btn full red" onclick="closeModal('recoveryModal')">Fechar</button><div class="syncStatus" id="recoveryStatus">Senha temporária padrão após recuperação: 123456</div></div></div>
 <div id="confirmModal" class="modal hidden"><div class="modalBox glass"><h2>Confirmação de segurança</h2><p id="confirmMsg">Digite a senha do administrador para continuar.</p><label>Senha Admin</label><input id="confirmPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('confirmPass')">👁 Mostrar/Ocultar senha</button><button class="btn full red" id="confirmBtn">Confirmar</button><button class="btn full dark" onclick="closeModal('confirmModal')">Cancelar</button></div></div>
+<div id="loanDateModal" class="modal hidden"><div class="modalBox glass"><h2>📅 Alterar data do empréstimo</h2><p>Altere a data inicial e o vencimento. O sistema atualiza os dias corridos, status e histórico.</p><label>Data do empréstimo</label><input id="editLoanStart" type="date"><label>Data de vencimento</label><input id="editLoanDue" type="date"><div class="card okBox" style="margin:14px 0;padding:14px"><div class="row"><b>Dias corridos</b><span id="editLoanDays">0 dias</span></div><div class="row"><b>Status previsto</b><span id="editLoanStatus">--</span></div></div><button class="btn green full" onclick="saveLoanDates()">Salvar datas</button><button class="btn full dark" onclick="closeModal('loanDateModal')">Cancelar</button></div></div>
 <div id="app" class="app hidden">
   <aside class="side glass">
     <div class="sideBrand">💎 Prime Cash</div>
@@ -105,9 +111,9 @@
   <main class="main">
     <div class="topbar glass"><div><h1 id="pageTitle">Dashboard</h1><small id="welcome">Bem-vindo</small></div><div class="clock" id="clock"></div></div>
 
-    <section id="uDashboard"><div class="grid4"><div class="metric"><small>Meu plano</small><b id="uPlan" class="goldText">Free</b></div><div class="metric"><small>Limite</small><b id="uLimit" class="blueText">R$ 0,00</b></div><div class="metric"><small>Em aberto</small><b id="uOpen" class="redText">R$ 0,00</b></div><div class="metric"><small>Próximo vencimento</small><b id="uDue" class="greenText">--</b></div></div><div class="grid3"><div class="card banner"><h2>💎 Prime Cash</h2><p>Acompanhe seus empréstimos, pagamentos e solicitações em um painel simples e profissional.</p><button class="btn green" onclick="openPage('uSupport')">Falar com suporte</button><div class="mascot">🦔</div></div><div class="card"><h3>📋 Meu empréstimo ativo</h3><div id="uActiveLoan"></div></div><div class="card premiumActionCard" id="premiumStatusCard"><h3>👑 Premium</h3><p>Carregando status do plano...</p><button class="btn gold full" onclick="openPage('uPlanos')">Ver pagamento</button></div></div></section>
+    <section id="uDashboard"><div class="grid4"><div class="metric"><small>Meu plano</small><b id="uPlan" class="goldText">Free</b></div><div class="metric"><small>Limite</small><b id="uLimit" class="blueText">R$ 0,00</b></div><div class="metric"><small>Em aberto</small><b id="uOpen" class="redText">R$ 0,00</b></div><div class="metric"><small>Próximo vencimento</small><b id="uDue" class="greenText">--</b></div></div><div class="grid3"><div class="card banner"><h2>💎 Prime Cash</h2><p>Acompanhe seus empréstimos, pagamentos e solicitações em um painel simples e profissional.</p><button class="btn green" onclick="openPage('uSupport')">Falar com suporte</button><div class="mascot">🦔</div></div><div class="card"><h3>📋 Meu empréstimo ativo</h3><div id="uActiveLoan"></div></div><div class="card premiumActionCard" id="premiumStatusCard"><h3>⚡ Ações rápidas</h3><p>Resumo prático para controlar seus empréstimos sem mostrar cartão premium na tela inicial.</p><div id="quickLoanResumo"></div><button class="btn green full" onclick="openPage('uRequest')">Anotar novo empréstimo</button></div></div></section>
     <section id="uLoans"><div class="card"><h2>💸 Meus empréstimos</h2><div class="tableWrap"><table><thead><tr><th>Cliente</th><th>Telefone</th><th>Valor</th><th>Total</th><th>Vencimento</th><th>Status</th><th>Ação</th></tr></thead><tbody id="uLoansTable"></tbody></table></div></div></section>
-    <section id="uRequest"><div class="grid2"><div class="card"><h2>📝 Anotar empréstimo</h2><p style="color:#9bb4d5;font-weight:800">Registre aqui os empréstimos que você fez. Cada usuário vê somente as próprias anotações.</p><label>Nome do cliente</label><input id="noteClient" placeholder="Ex: João Silva"><label>Telefone do cliente</label><input id="notePhone" placeholder="Ex: (83) 99999-9999"><label>Valor emprestado</label><input id="reqValue" type="number" placeholder="Ex: 500" oninput="calcNoteTotal()"><label>Juros (%)</label><input id="noteInterest" type="number" placeholder="Ex: 30" value="30" oninput="calcNoteTotal()"><label>Parcelas</label><select id="reqInstall"><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>12</option></select><label>Data de vencimento</label><input id="noteDue" type="date"><label>Observação</label><textarea id="reqReason" placeholder="Ex: pagamento semanal, pix, combinado no WhatsApp"></textarea><div class="card okBox" style="margin:14px 0 0;padding:14px"><div class="row"><b>Valor</b><span id="notePreviewValue">R$ 0,00</span></div><div class="row"><b>Juros</b><span id="notePreviewInterest">0%</span></div><div class="row"><b>Total a receber</b><span id="notePreviewTotal" class="greenText">R$ 0,00</span></div></div><button class="btn green full" onclick="requestLoan()">Salvar empréstimo</button></div><div class="card"><h2>📋 Empréstimos anotados</h2><div id="uRequests"></div></div></div></section>
+    <section id="uRequest"><div class="grid2"><div class="card"><h2>📝 Anotar empréstimo</h2><p style="color:#9bb4d5;font-weight:800">Registre aqui os empréstimos que você fez. Cada usuário vê somente as próprias anotações.</p><label>Nome do cliente</label><input id="noteClient" placeholder="Ex: João Silva"><label>Telefone do cliente</label><input id="notePhone" placeholder="Ex: (83) 99999-9999"><label>Valor emprestado</label><input id="reqValue" type="number" placeholder="Ex: 500" oninput="calcNoteTotal()"><label>Juros (%)</label><input id="noteInterest" type="number" placeholder="Ex: 30" value="30" oninput="calcNoteTotal()"><label>Parcelas</label><select id="reqInstall"><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>12</option></select><label>Data do empréstimo</label><input id="noteLoanDate" type="date"><label>Data de vencimento</label><input id="noteDue" type="date"><label>Observação</label><textarea id="reqReason" placeholder="Ex: pagamento semanal, pix, combinado no WhatsApp"></textarea><div class="card okBox" style="margin:14px 0 0;padding:14px"><div class="row"><b>Valor</b><span id="notePreviewValue">R$ 0,00</span></div><div class="row"><b>Juros</b><span id="notePreviewInterest">0%</span></div><div class="row"><b>Total a receber</b><span id="notePreviewTotal" class="greenText">R$ 0,00</span></div></div><button class="btn green full" onclick="requestLoan()">Salvar empréstimo</button></div><div class="card"><h2>📋 Empréstimos anotados</h2><div id="uRequests"></div></div></div></section>
     <section id="uPayments"><div class="card"><h2>💳 Pagamentos</h2><div id="uPaymentsList"></div></div></section>
     <section id="uPlanos"><div class="grid2"><div class="card"><h2>🆓 Plano Gratuito</h2><p>Solicitações básicas, histórico simples e suporte comum.</p><div class="premiumBenefits"><span>✅ Controle básico de empréstimos</span><span>✅ Histórico simples</span><span>✅ Suporte comum</span></div><button class="btn free full" onclick="selectPlan('free')">Continuar no gratuito</button></div><div class="card okBox"><h2>👑 Plano Premium</h2><p>Libera limite maior, prioridade, relatórios e recursos avançados.</p><h3>R$ <span id="premiumPrice">29,90</span>/mês</h3><div class="pixBox"><b>📲 Pagamento via PIX</b><img id="pixQrImage" class="pixQr" alt="QR Code PIX"><div>Chave PIX:</div><div class="pixCopy" id="pixKeyShow">configure-no-admin@pix</div><div class="btnRow" style="justify-content:center;margin-top:12px"><button class="btn dark" onclick="copyPixKey()">Copiar PIX</button><button class="btn gold" onclick="requestPremium()">Já paguei / Solicitar ativação</button></div></div><div class="paymentSteps"><div>1️⃣ Escaneie o QR Code ou copie a chave PIX.</div><div>2️⃣ Faça o pagamento do plano.</div><div>3️⃣ Clique em “Já paguei” e aguarde o admin ativar.</div></div></div></div></section>
     <section id="uProfile"><div class="grid2"><div class="card"><h2>👤 Meu perfil</h2><label>Nome</label><input id="profName"><label>Usuário</label><input id="profUser"><label>E-mail</label><input id="profEmail"><label>Telefone</label><input id="profPhone"><button class="btn green full" onclick="saveProfile()">Salvar alterações</button></div><div class="card"><h2>🔒 Alterar senha</h2><label>Senha atual</label><input id="oldPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('oldPass')">👁 Mostrar senha atual</button><label>Nova senha</label><input id="newPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('newPass')">👁 Mostrar nova senha</button><label>Confirmar nova senha</label><input id="newPass2" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('newPass2')">👁 Mostrar confirmação</button><button class="btn full" onclick="changePassword()">Alterar senha e sair</button><p style="color:#9bb4d5;font-weight:800;margin-top:12px">Por segurança, após alterar a senha você será desconectado.</p></div></div></section>
@@ -672,6 +678,102 @@ function baixarSqlBancoPix(){
 const _pcRenderAdminBancoPix = renderAdmin;
 renderAdmin = function(){ _pcRenderAdminBancoPix(); preencherBancoPix(); };
 window.addEventListener('load',()=>setTimeout(preencherBancoPix,1000));
+
+
+/* === Prime Cash v7.4 - Data do empréstimo + troca do card Premium da tela inicial === */
+let editingLoanDateId=null;
+function pcDateISO(d){
+  if(!d)return '';
+  if(/^\d{4}-\d{2}-\d{2}$/.test(String(d)))return d;
+  if(/^\d{2}\/\d{2}\/\d{4}$/.test(String(d))){const [dia,mes,ano]=String(d).split('/');return `${ano}-${mes}-${dia}`;}
+  const dt=new Date(d);return isNaN(dt)?'':dt.toISOString().slice(0,10);
+}
+function pcBrDate(iso){
+  iso=pcDateISO(iso); if(!iso)return '--'; const [a,m,d]=iso.split('-'); return `${d}/${m}/${a}`;
+}
+function pcDaysBetween(a,b){
+  a=pcDateISO(a); b=pcDateISO(b); if(!a||!b)return 0;
+  const da=new Date(a+'T00:00:00'), dbb=new Date(b+'T00:00:00');
+  return Math.max(0,Math.round((dbb-da)/(1000*60*60*24)));
+}
+function pcLoanStatusByDue(due){
+  const hoje=new Date(); hoje.setHours(0,0,0,0);
+  const d=new Date(pcDateISO(due)+'T00:00:00');
+  if(!due||isNaN(d))return 'active';
+  return d<hoje?'overdue':'active';
+}
+function pcStatusPill(s){
+  if(s==='overdue')return '<span class="pill red">Atrasado</span>';
+  return statusPill(s);
+}
+function pcEnsureLoanDates(){
+  const today=new Date().toISOString().slice(0,10);
+  (db.loans||[]).forEach(l=>{ if(!l.loanDate) l.loanDate=pcDateISO(l.created)||today; });
+}
+function renderPremiumStatusCard(){
+  const box=document.getElementById('premiumStatusCard'); if(!box||!current)return;
+  const loans=(db.loans||[]).filter(l=>l.userId===current.id);
+  const active=loans.filter(l=>l.status==='active'||l.status==='overdue');
+  const atrasados=active.filter(l=>pcLoanStatusByDue(l.due)==='overdue').length;
+  const aberto=active.reduce((a,l)=>a+(Number(l.total)||0)-(Number(l.paid)||0),0);
+  box.className='card premiumActionCard active';
+  box.innerHTML=`<h3>⚡ Controle rápido</h3><p>Esse espaço substituiu o aviso de Premium.</p><div class="premiumBenefits"><span>💰 Em aberto: <b>${fmt(aberto)}</b></span><span>📌 Empréstimos ativos: <b>${active.length}</b></span><span>⚠️ Atrasados: <b>${atrasados}</b></span></div><button class="btn green full" onclick="openPage('uRequest')">Anotar novo empréstimo</button>`;
+}
+const _pcOldCalcNoteTotalData = calcNoteTotal;
+calcNoteTotal = function(){
+  try{_pcOldCalcNoteTotalData()}catch(e){}
+  const start=document.getElementById('noteLoanDate');
+  if(start && !start.value) start.value=new Date().toISOString().slice(0,10);
+};
+const _pcOldRequestLoanData = requestLoan;
+requestLoan = async function(){
+  const chosenDate=(document.getElementById('noteLoanDate')?.value)||new Date().toISOString().slice(0,10);
+  await _pcOldRequestLoanData();
+  const newest=(db.loans||[]).find(l=>l.userId===current?.id);
+  if(newest && !newest.loanDate){ newest.loanDate=chosenDate; save(); try{await sbUpdateLoan(newest,{data_emprestimo:chosenDate});}catch(e){} }
+  const field=document.getElementById('noteLoanDate'); if(field)field.value=new Date().toISOString().slice(0,10);
+  renderAll();
+};
+function openLoanDateEditor(id){
+  pcEnsureLoanDates();
+  const l=(db.loans||[]).find(x=>x.id===id); if(!l)return toast('Empréstimo não encontrado');
+  editingLoanDateId=id;
+  document.getElementById('editLoanStart').value=pcDateISO(l.loanDate||l.created)||new Date().toISOString().slice(0,10);
+  document.getElementById('editLoanDue').value=pcDateISO(l.due)||'';
+  updateLoanDatePreview();
+  document.getElementById('loanDateModal').classList.remove('hidden');
+}
+function updateLoanDatePreview(){
+  const s=document.getElementById('editLoanStart')?.value, d=document.getElementById('editLoanDue')?.value;
+  const days=pcDaysBetween(s,d);
+  const status=pcLoanStatusByDue(d)==='overdue'?'Atrasado':'Em dia';
+  const elD=document.getElementById('editLoanDays'), elS=document.getElementById('editLoanStatus');
+  if(elD)elD.textContent=days+' dias';
+  if(elS)elS.innerHTML=status==='Atrasado'?'<span class="pill red">Atrasado</span>':'<span class="pill">Em dia</span>';
+}
+async function saveLoanDates(){
+  const l=(db.loans||[]).find(x=>x.id===editingLoanDateId); if(!l)return toast('Empréstimo não encontrado');
+  const oldStart=l.loanDate||l.created||'', oldDue=l.due||'';
+  const ns=document.getElementById('editLoanStart').value, nd=document.getElementById('editLoanDue').value;
+  if(!ns||!nd)return toast('Informe as duas datas');
+  l.loanDate=ns; l.due=nd; if(l.status!=='paid')l.status=pcLoanStatusByDue(nd);
+  l.history=l.history||[]; l.history.unshift({date:new Date().toLocaleString('pt-BR'),action:`Datas alteradas: empréstimo ${pcBrDate(oldStart)} → ${pcBrDate(ns)} | vencimento ${pcBrDate(oldDue)} → ${pcBrDate(nd)}`,user:current?.username||'sistema'});
+  save();
+  try{await sbTry('logs_admin',{usuario:current?.username||'sistema',acao:'DATA_EMPRESTIMO_ALTERADA',detalhes:JSON.stringify({loanId:l.id,oldStart,oldDue,ns,nd})});}catch(e){}
+  closeModal('loanDateModal'); renderAll(); toast('Data do empréstimo alterada');
+}
+document.addEventListener('input',e=>{ if(e.target&&['editLoanStart','editLoanDue'].includes(e.target.id)) updateLoanDatePreview(); });
+const _pcOldRenderUserData = renderUser;
+renderUser = function(){
+  pcEnsureLoanDates();
+  const loans=myLoans(),active=loans.filter(l=>l.status==='active'||l.status==='overdue'),open=active.reduce((a,l)=>a+(l.total-l.paid),0);
+  uPlan.textContent=current.plan==='premium'?'Premium':'Gratuito';uPlan.className=current.plan==='premium'?'goldText':'blueText';uLimit.textContent=fmt(current.plan==='premium'?5000:800);uOpen.textContent=fmt(open);uDue.textContent=active[0]?.due||'Sem vencimento';
+  uActiveLoan.innerHTML=active[0]?`<div class="row"><b>Data do empréstimo</b><span>${pcBrDate(active[0].loanDate||active[0].created)}</span></div><div class="row"><b>Vencimento</b><span>${pcBrDate(active[0].due)}</span></div><div class="row"><b>Total</b><span>${fmt(active[0].total)}</span></div><div class="row"><b>Pago</b><span>${fmt(active[0].paid)}</span></div><div class="progress"><div class="bar" style="width:${Math.min(100,(active[0].paid/active[0].total)*100)}%"></div></div><button class="btn dark full" style="margin-top:10px" onclick="openLoanDateEditor('${active[0].id}')">📅 Alterar data</button>`:'<p>Nenhum empréstimo ativo.</p>';
+  uLoansTable.innerHTML=loans.map(l=>`<tr><td>${l.client||'Sem nome'}<div class="loanDateInfo"><span>📅 Empréstimo: ${pcBrDate(l.loanDate||l.created)}</span></div></td><td>${l.phone||'-'}</td><td>${fmt(l.value)}</td><td>${fmt(l.total)}</td><td>${pcBrDate(l.due)}</td><td>${pcStatusPill(l.status)}</td><td class="btnRow"><button class="btn dateBtn" onclick="openLoanDateEditor('${l.id}')">📅 Data</button><button class="btn green" onclick="markMyLoanPaid('${l.id}')">Pago</button><button class="btn dark" onclick="makeReceipt('${l.id}')">Comprovante</button><button class="btn red" onclick="deleteMyLoan('${l.id}')">Excluir</button></td></tr>`).join('')||'<tr><td colspan="7">Sem empréstimos anotados.</td></tr>';
+  uRequests.innerHTML=loans.map(l=>`<div class="row"><span><b>${l.client||'Sem nome'}</b><br><small>Emprestado em ${pcBrDate(l.loanDate||l.created)} • vence ${pcBrDate(l.due)} • ${fmt(l.value)} → ${fmt(l.total)}</small></span><span>${pcStatusPill(l.status)}</span></div>`).join('')||'<p>Nenhuma anotação criada.</p>';
+  uPaymentsList.innerHTML=db.payments.filter(p=>p.userId===current.id).map(p=>`<div class="row"><span>${p.date}</span><b>${fmt(p.value)}</b></div>`).join('')||'<p>Nenhum pagamento registrado.</p>';profName.value=current.name;profUser.value=current.username;profEmail.value=current.email;profPhone.value=current.phone||'';uSupportList.innerHTML=db.support.filter(s=>s.userId===current.id).map(s=>`<div class="row"><span>${s.msg}</span>${statusPill(s.status)}</div>`).join('')||'<p>Sem mensagens.</p>';renderPremiumStatusCard();updatePixQr();save();
+};
+window.addEventListener('load',()=>{setTimeout(()=>{const f=document.getElementById('noteLoanDate'); if(f&&!f.value)f.value=new Date().toISOString().slice(0,10);},500)});
 
 registerPWA();updatePrimeCashFooter();
 </script>
