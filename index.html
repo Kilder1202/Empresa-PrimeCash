@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prime Cash Pro</title>
+<meta name="theme-color" content="#07172c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prime Cash">
+<meta name="format-detection" content="telephone=no">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#020712;--panel:rgba(5,17,35,.86);--card:rgba(7,27,54,.78);--line:#0b84ff;--blue:#0b84ff;--gold:#ffd33d;--green:#20e98a;--red:#ff4d5e;--muted:#9bb4d5;--text:#f6fbff;--free:#7dd3fc;--premium:#ffd33d}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 80% 0,#0b56b8 0,#020712 35%,#01030a 100%);color:var(--text);overflow-x:hidden}button,input,select,textarea{font-family:inherit}button{cursor:pointer}.hidden{display:none!important}body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 12%,rgba(11,132,255,.22),transparent 27%),radial-gradient(circle at 90% 88%,rgba(255,211,61,.14),transparent 28%);z-index:-2}body:after{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,transparent,black 20%,black 75%,transparent);z-index:-1}.glass{background:var(--panel);border:1px solid rgba(11,132,255,.38);box-shadow:0 22px 70px rgba(0,0,0,.38),inset 0 0 0 1px rgba(255,255,255,.04);backdrop-filter:blur(14px);border-radius:28px}.login{min-height:100vh;padding:24px;display:grid;place-items:center}.loginShell{width:min(1180px,100%);display:grid;grid-template-columns:1fr 1fr;gap:24px}.hero{position:relative;min-height:560px;padding:34px;overflow:hidden;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:900;color:var(--gold);text-shadow:0 0 18px rgba(255,211,61,.35)}.hero h1{font-size:42px;line-height:1.03;margin:22px 0 12px;max-width:470px}.hero h1 span{color:var(--gold);text-shadow:0 0 28px rgba(255,211,61,.45)}.hero p{color:#cfe2ff;font-size:16px;font-weight:800;line-height:1.5;max-width:470px}.badges{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.badge{border:1px solid rgba(11,132,255,.45);background:rgba(2,9,22,.65);border-radius:999px;padding:10px 13px;font-weight:900;color:#e5f3ff}.sonic{position:absolute;right:22px;bottom:120px;width:130px;height:130px;border-radius:35px;display:grid;place-items:center;font-size:75px;background:radial-gradient(circle,#0b84ff,#04172e 65%);filter:drop-shadow(0 0 30px rgba(11,132,255,.7));opacity:.82}.heroStats{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;z-index:2}.mini,.metric{background:rgba(2,8,18,.6);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:16px}.mini small,.metric small{color:var(--muted);font-weight:900;text-transform:uppercase;font-size:11px}.mini b,.metric b{display:block;margin-top:8px;font-size:23px}.accessPanel{display:grid;grid-template-rows:auto 1fr auto;gap:14px;padding:26px}.accessTop h2{margin:0;font-size:34px}.accessTop p{color:#bad4ff;font-weight:800}.choiceGrid{display:grid;gap:16px;align-content:center}.accessCard{border:1px solid rgba(11,132,255,.35);background:linear-gradient(135deg,rgba(11,132,255,.18),rgba(4,18,37,.82));border-radius:24px;padding:25px;text-align:left;color:#fff;transition:.25s;position:relative;overflow:hidden}.accessCard.admin{background:linear-gradient(135deg,rgba(255,211,61,.18),rgba(4,18,37,.82));border-color:rgba(255,211,61,.38)}.accessCard:hover{transform:translateY(-5px);box-shadow:0 0 45px rgba(11,132,255,.28)}.accessCard:after{content:"";position:absolute;right:-40px;bottom:-40px;width:155px;height:155px;border-radius:50%;border:22px solid rgba(11,132,255,.12)}.accessCard .icon{font-size:42px;width:70px;height:70px;border-radius:22px;display:grid;place-items:center;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);margin-bottom:18px}.accessCard h3{font-size:25px;margin:0 0 8px}.accessCard p{color:#cfe2ff;font-weight:800;margin:0 0 18px}.btn{border:0;border-radius:14px;padding:13px 16px;background:linear-gradient(135deg,#006dff,#18a7ff);color:#fff;font-weight:900;transition:.2s}.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.btn.full{width:100%}.btn.gold{background:linear-gradient(135deg,#c68600,#ffd33d);color:#061326}.btn.green{background:linear-gradient(135deg,#05a653,#20e98a)}.btn.red{background:linear-gradient(135deg,#d62435,#ff4d5e)}.btn.dark{background:#061529;border:1px solid rgba(11,132,255,.45)}.btn.free{background:linear-gradient(135deg,#0369a1,#38bdf8)}.btnRow{display:flex;gap:10px;flex-wrap:wrap}.sellBox{border-top:1px solid rgba(255,255,255,.08);padding-top:16px;color:#cfe2ff;font-size:13px}.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:18px;z-index:50}.modalBox{width:min(480px,100%);padding:25px}.modalBox h2{margin:0 0 8px}.modalBox p{color:var(--muted);font-weight:800}label{display:block;margin:13px 0 7px;color:#cce1ff;font-size:13px;font-weight:900}input,select,textarea{width:100%;background:#061529;border:1px solid rgba(11,132,255,.45);border-radius:14px;padding:14px;color:#fff;outline:none}textarea{min-height:95px}.app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.side{border-radius:0;border-top:0;border-left:0;border-bottom:0;padding:18px;height:100vh;position:sticky;top:0;overflow:auto}.sideBrand{font-size:23px;font-weight:900;color:var(--gold);margin:8px 0 20px;display:flex;gap:10px;align-items:center}.profile{background:linear-gradient(135deg,#0b84ff,#082855);border:1px solid #2495ff;border-radius:20px;padding:15px;text-align:center;margin-bottom:16px}.profile .avatar{width:62px;height:62px;border-radius:50%;margin:auto;display:grid;place-items:center;font-size:36px;background:#061529;box-shadow:0 0 24px rgba(11,132,255,.6)}.profile b{display:block;margin-top:8px}.profile span{color:#74ffb2;font-weight:900;font-size:12px}.nav button{width:100%;border:1px solid transparent;background:transparent;color:#e9f2ff;border-radius:14px;padding:13px;text-align:left;font-weight:900;margin:6px 0}.nav button.active,.nav button:hover{background:linear-gradient(135deg,#003ebd,#0b84ff);border-color:#62b7ff}.secure{margin-top:18px;background:#063328;border:1px solid rgba(32,233,138,.55);border-radius:16px;padding:13px;color:#d8ffe9;font-size:12px}.main{padding:22px;max-width:1380px;width:100%}.topbar{padding:18px 20px;display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:18px}.topbar h1{margin:0}.topbar small{color:var(--muted);font-weight:900}.clock{border:1px solid #0b84ff;background:#04172e;border-radius:999px;padding:12px 16px;font-weight:900}section{display:none}section.active{display:block}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}.grid3{display:grid;grid-template-columns:1.05fr 1fr .85fr;gap:14px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{padding:18px;border-radius:22px;background:var(--card);border:1px solid rgba(11,132,255,.28);box-shadow:0 18px 50px rgba(0,0,0,.25)}.metric{min-height:120px;position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-40px;bottom:-55px;width:140px;height:140px;border-radius:50%;background:rgba(11,132,255,.12)}.greenText{color:var(--green)}.redText{color:var(--red)}.goldText{color:var(--gold)}.blueText{color:#54c5ff}.banner{position:relative;overflow:hidden;min-height:180px;background:linear-gradient(120deg,#0647b5,#07172c 58%,#06265a);padding-right:150px}.banner .mascot{position:absolute;right:18px;bottom:12px;width:105px;height:105px;border-radius:28px;display:grid;place-items:center;font-size:62px;background:radial-gradient(circle,#0b84ff,#04172e 65%);filter:drop-shadow(0 0 22px rgba(11,132,255,.8))}.progress{height:10px;background:#04101f;border:1px solid #174a86;border-radius:99px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#0b84ff,#21e68b);width:55%}.row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 0}.tableWrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:11px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}th{color:#54c5ff;text-transform:uppercase;font-size:11px}.pill{display:inline-flex;border:1px solid rgba(32,233,138,.38);background:rgba(32,233,138,.12);color:#83ffbd;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900}.pill.free{border-color:#38bdf8;color:#a5e8ff;background:rgba(56,189,248,.12)}.pill.premium{border-color:#ffd33d;color:#ffe893;background:rgba(255,211,61,.12)}.pill.red{border-color:#ff4d5e;color:#ffc6cc;background:rgba(255,77,94,.12)}#toast{position:fixed;right:20px;top:20px;background:#063328;border:1px solid var(--green);color:#ddffed;border-radius:16px;padding:14px 18px;font-weight:900;display:none;z-index:80}.footerLabel{position:fixed;bottom:0;left:260px;right:0;text-align:center;background:rgba(2,7,20,.78);border-top:1px solid rgba(11,132,255,.35);padding:8px;color:#0b84ff;font-weight:900}.dangerZone{border-color:rgba(255,77,94,.45)!important;background:linear-gradient(135deg,rgba(255,77,94,.12),rgba(7,27,54,.75))}.okBox{border-color:rgba(32,233,138,.4)!important;background:linear-gradient(135deg,rgba(32,233,138,.12),rgba(7,27,54,.75))}.showPass{margin-top:8px;padding:9px 12px;border-radius:12px;font-size:12px}.syncStatus{font-size:12px;color:#9bb4d5;margin-top:8px;font-weight:800}.rememberLine{display:flex!important;align-items:center;gap:9px;margin:10px 0 14px!important;color:#d8ffe9!important;background:rgba(32,233,138,.08);border:1px solid rgba(32,233,138,.28);border-radius:14px;padding:10px;font-size:13px}.rememberLine input{width:auto!important;accent-color:#20e98a}.savedLoginInfo{font-size:12px;color:#9bb4d5;margin-top:8px;font-weight:800}
+@media(max-width:980px){.loginShell{grid-template-columns:1fr}.hero{min-height:auto}.hero h1{font-size:36px}.sonic{display:none}.heroStats{grid-template-columns:1fr;margin-top:16px}.app{grid-template-columns:1fr}.side{height:auto;position:relative;border-right:0;border-bottom:1px solid rgba(11,132,255,.34)}.grid4,.grid3,.grid2{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:flex-start}.banner{padding-right:20px;padding-bottom:120px}.banner .mascot{width:92px;height:92px;font-size:54px}.footerLabel{position:static}}@media print{body{background:white;color:#111}.side,.topbar,.btn,.nav,#toast,.footerLabel{display:none!important}.app{display:block}.main{padding:0}.card{box-shadow:none;border:1px solid #ddd;background:white;color:#111}table,th,td{color:#111;border-color:#ddd}}
+/* Prime Cash - Rodapé automático, navegador mobile e PWA */
+.pc-update-footer{margin:24px 22px 82px;padding:18px 20px;border-radius:22px;background:linear-gradient(135deg,rgba(2,8,18,.92),rgba(7,23,44,.96));border:1px solid rgba(11,132,255,.42);box-shadow:0 18px 48px rgba(0,0,0,.32),0 0 22px rgba(11,132,255,.10);color:#eaf5ff;text-align:center;font-size:13px;line-height:1.45}
+.pc-update-footer b{color:var(--gold)}
+.pc-update-footer .pc-foot-grid{margin-top:13px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.pc-update-footer .pc-foot-pill{border:1px solid rgba(255,211,61,.32);background:rgba(255,211,61,.08);color:#ffe893;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900}
+.pc-browser-banner{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(720px,calc(100% - 24px));z-index:90;display:none;gap:12px;align-items:center;justify-content:space-between;border:1px solid rgba(32,233,138,.45);background:linear-gradient(135deg,rgba(3,51,40,.96),rgba(4,18,37,.98));color:#eafff3;border-radius:18px;padding:12px 14px;box-shadow:0 14px 42px rgba(0,0,0,.48)}
+.pc-browser-banner.show{display:flex}
+.pc-browser-banner small{color:#bdfbd8;font-weight:800}
+.pc-browser-banner .btn{padding:10px 12px;font-size:12px;white-space:nowrap}
+.pc-update-modal{position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.72);display:none;place-items:center;padding:18px}
+.pc-update-modal.show{display:grid}
+.pc-update-box{width:min(520px,100%);border-radius:26px;padding:24px;background:linear-gradient(135deg,rgba(7,23,44,.98),rgba(2,8,18,.98));border:1px solid rgba(255,211,61,.42);box-shadow:0 25px 75px rgba(0,0,0,.55);text-align:center}
+.pc-update-box h2{margin:0 0 10px;color:var(--gold)}
+.pc-update-box p{color:#cfe2ff;font-weight:800;line-height:1.5}
+.pc-update-box ul{text-align:left;color:#dff0ff;line-height:1.7}
+@media(max-width:680px){.pc-update-footer{margin:18px 12px 88px;font-size:12px}.pc-browser-banner{align-items:flex-start;flex-direction:column}.pc-browser-banner .btnRow{width:100%}.pc-browser-banner .btn{flex:1}.login{padding:14px}.hero,.accessPanel{padding:22px}.hero h1{font-size:31px}.accessTop h2{font-size:28px}.main{padding:14px}.card{padding:15px}.metric b{font-size:20px}.side{border-radius:0 0 22px 22px}.nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}.nav button{font-size:12px;margin:0;padding:11px}.footerLabel{font-size:11px;padding:7px}.tableWrap table{min-width:720px}}
+
+/* Premium ativo + QR PIX */
+.premiumActionCard{min-height:180px;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.premiumActionCard.active{border-color:rgba(32,233,138,.45);background:linear-gradient(135deg,rgba(32,233,138,.14),rgba(7,27,54,.78))}
+.premiumActionCard.pending{border-color:rgba(255,211,61,.45);background:linear-gradient(135deg,rgba(255,211,61,.13),rgba(7,27,54,.78))}
+.premiumBenefits{display:grid;gap:8px;margin:10px 0;color:#dff0ff;font-size:13px;font-weight:800}
+.premiumBenefits span{display:block;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px}
+.pixBox{margin-top:14px;padding:16px;border-radius:20px;background:rgba(2,8,18,.55);border:1px solid rgba(255,211,61,.28);text-align:center}
+.pixQr{width:190px;height:190px;max-width:100%;border-radius:18px;background:#fff;padding:10px;margin:8px auto 12px;display:block;box-shadow:0 0 22px rgba(255,211,61,.15)}
+.pixCopy{word-break:break-all;color:#ffe893;font-weight:900;font-size:13px}
+.paymentSteps{display:grid;gap:8px;margin-top:12px;text-align:left;color:#dff0ff;font-size:13px;font-weight:800}
+.paymentSteps div{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}
+
+/* Prime Cash v6.2 - Central Deploy + Banco Total */
+.deployGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.deployBox{padding:16px;border-radius:18px;background:rgba(2,8,18,.55);border:1px solid rgba(11,132,255,.25)}
+.deployBox b{color:var(--gold)}
+.statusDot{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;background:rgba(32,233,138,.12);border:1px solid rgba(32,233,138,.35);color:#bdfbd8;font-weight:900;font-size:12px}
+.warnDot{background:rgba(255,211,61,.10);border-color:rgba(255,211,61,.35);color:#ffe893}
+.dbHealth{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+.dbHealth .metric{min-height:auto;padding:14px}
+.quickCode{background:#020712;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px;color:#dff0ff;font-size:12px;overflow:auto;white-space:pre-wrap}
+@media(max-width:800px){.deployGrid,.dbHealth{grid-template-columns:1fr}}
+
+
+/* Banco/PIX protegido no celular */
+.bankPixGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bankSecureBox{border:1px solid rgba(32,233,138,.42);background:linear-gradient(135deg,rgba(32,233,138,.12),rgba(7,27,54,.76));border-radius:22px;padding:16px}
+.bankWarnBox{border:1px solid rgba(255,211,61,.36);background:rgba(255,211,61,.08);border-radius:16px;padding:12px;color:#ffe893;font-size:13px;font-weight:800;line-height:1.45}
+.bankPixPreview{margin-top:12px;text-align:center;background:rgba(2,8,18,.58);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:16px}
+.bankPixPreview img{width:210px;height:210px;max-width:100%;background:#fff;border-radius:18px;padding:10px;margin:8px auto;display:block}
+.bankPixLine{word-break:break-all;color:#ffe893;font-weight:900;font-size:13px;background:rgba(255,211,61,.08);border-radius:12px;padding:10px;margin-top:8px}
+.secureTag{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(32,233,138,.42);background:rgba(32,233,138,.11);color:#a7ffd0;border-radius:999px;padding:7px 10px;font-weight:900;font-size:12px;margin:4px}
+@media(max-width:800px){.bankPixGrid{grid-template-columns:1fr}.bankPixPreview img{width:185px;height:185px}}
+
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="login" class="login">
+  <div class="loginShell">
+    <div class="hero glass">
+      <div class="brand">💎 Prime Cash <span style="color:#0b84ff">Pro</span></div>
+      <h1>Gestão financeira <span>premium</span></h1>
+      <p>Pronto para Netlify com usuários, admin, planos grátis/premium, anotações privadas de empréstimos, pagamentos, relatórios, backup, limpeza e PWA.</p>
+      <div class="badges"><span class="badge">🔐 Login separado</span><span class="badge">📊 Dashboard</span><span class="badge">💾 Dados salvos</span><span class="badge">📱 PWA Android</span></div>
+      <div class="sonic">🦔</div>
+      <div class="heroStats"><div class="mini"><small>Plano Free</small><b>Ativo</b></div><div class="mini"><small>Plano Premium</small><b>PIX</b></div><div class="mini"><small>Admin</small><b>Completo</b></div></div>
+    </div>
+    <div class="accessPanel glass">
+      <div class="accessTop"><h2>Escolha o acesso</h2><p>O login só abre depois de clicar no tipo desejado.</p></div>
+      <div class="choiceGrid">
+        <button class="accessCard user" onclick="openLogin('user')"><div class="icon">👤</div><h3>Acesso Usuário</h3><p>Anotar empréstimos, controlar pagamentos, alterar senha e acompanhar plano.</p><span class="btn">Entrar como usuário</span></button>
+        <button class="accessCard admin" onclick="openLogin('admin')"><div class="icon">👑</div><h3>Acesso Administrador</h3><p>Aprovar usuários, controlar planos, empréstimos, relatórios, logs e limpeza.</p><span class="btn gold">Entrar como admin</span></button>
+      </div>
+      <div class="sellBox">🔒 Acesso protegido. Cada conta pode alterar seu próprio login e senha no Perfil/Configurações.</div>
+    </div>
+  </div>
+</div>
+<div id="loginModal" class="modal hidden"><div class="modalBox glass"><h2 id="modalTitle">Login</h2><p id="modalText">Entre com seus dados.</p><label>Usuário ou e-mail</label><input id="loginUser" autocomplete="username"><label>Senha</label><input id="loginPass" type="password" autocomplete="current-password"><button type="button" class="btn dark showPass" onclick="toggleSenha('loginPass')">👁 Mostrar/Ocultar senha</button><label class="rememberLine"><input id="rememberLogin" type="checkbox"> 💾 Salvar login e senha neste aparelho</label><button class="btn full" onclick="doLogin()">Entrar</button><div class="btnRow" style="margin-top:10px"><button class="btn dark" onclick="openSignup()">Criar conta</button><button class="btn dark" onclick="openRecovery()">Esqueci a senha</button><button class="btn red" onclick="closeModal('loginModal')">Fechar</button></div></div></div>
+<div id="signupModal" class="modal hidden"><div class="modalBox glass"><h2>Solicitar cadastro</h2><p>O administrador precisa aprovar seu acesso.</p><label>Nome</label><input id="suName"><label>E-mail</label><input id="suEmail"><label>Usuário</label><input id="suUser"><label>Senha</label><input id="suPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('suPass')">👁 Mostrar/Ocultar senha</button><button class="btn full green" onclick="signup()">Enviar para aprovação</button><button class="btn full red" onclick="closeModal('signupModal')">Cancelar</button></div></div>
+<div id="recoveryModal" class="modal hidden"><div class="modalBox glass"><h2>Recuperar senha</h2><p>Digite o e-mail ou usuário cadastrado. Para o administrador, o sistema restaura uma senha temporária segura no aparelho e tenta atualizar no Supabase.</p><label>Usuário ou e-mail</label><input id="recUser" placeholder="Ex: admin@primecash.local ou seu e-mail"><button class="btn full" onclick="recoverPassword()">Recuperar senha</button><button class="btn full red" onclick="closeModal('recoveryModal')">Fechar</button><div class="syncStatus" id="recoveryStatus">Senha temporária padrão após recuperação: 123456</div></div></div>
+<div id="confirmModal" class="modal hidden"><div class="modalBox glass"><h2>Confirmação de segurança</h2><p id="confirmMsg">Digite a senha do administrador para continuar.</p><label>Senha Admin</label><input id="confirmPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('confirmPass')">👁 Mostrar/Ocultar senha</button><button class="btn full red" id="confirmBtn">Confirmar</button><button class="btn full dark" onclick="closeModal('confirmModal')">Cancelar</button></div></div>
+<div id="app" class="app hidden">
+  <aside class="side glass">
+    <div class="sideBrand">💎 Prime Cash</div>
+    <div class="profile"><div class="avatar" id="avatarEmoji">👤</div><b id="sideName">Usuário</b><span id="sidePlan">● Plano</span></div>
+    <nav class="nav" id="nav"></nav>
+    
+  </aside>
+  <main class="main">
+    <div class="topbar glass"><div><h1 id="pageTitle">Dashboard</h1><small id="welcome">Bem-vindo</small></div><div class="clock" id="clock"></div></div>
+
+    <section id="uDashboard"><div class="grid4"><div class="metric"><small>Meu plano</small><b id="uPlan" class="goldText">Free</b></div><div class="metric"><small>Limite</small><b id="uLimit" class="blueText">R$ 0,00</b></div><div class="metric"><small>Em aberto</small><b id="uOpen" class="redText">R$ 0,00</b></div><div class="metric"><small>Próximo vencimento</small><b id="uDue" class="greenText">--</b></div></div><div class="grid3"><div class="card banner"><h2>💎 Prime Cash</h2><p>Acompanhe seus empréstimos, pagamentos e solicitações em um painel simples e profissional.</p><button class="btn green" onclick="openPage('uSupport')">Falar com suporte</button><div class="mascot">🦔</div></div><div class="card"><h3>📋 Meu empréstimo ativo</h3><div id="uActiveLoan"></div></div><div class="card premiumActionCard" id="premiumStatusCard"><h3>👑 Premium</h3><p>Carregando status do plano...</p><button class="btn gold full" onclick="openPage('uPlanos')">Ver pagamento</button></div></div></section>
+    <section id="uLoans"><div class="card"><h2>💸 Meus empréstimos</h2><div class="tableWrap"><table><thead><tr><th>Cliente</th><th>Telefone</th><th>Valor</th><th>Total</th><th>Vencimento</th><th>Status</th><th>Ação</th></tr></thead><tbody id="uLoansTable"></tbody></table></div></div></section>
+    <section id="uRequest"><div class="grid2"><div class="card"><h2>📝 Anotar empréstimo</h2><p style="color:#9bb4d5;font-weight:800">Registre aqui os empréstimos que você fez. Cada usuário vê somente as próprias anotações.</p><label>Nome do cliente</label><input id="noteClient" placeholder="Ex: João Silva"><label>Telefone do cliente</label><input id="notePhone" placeholder="Ex: (83) 99999-9999"><label>Valor emprestado</label><input id="reqValue" type="number" placeholder="Ex: 500" oninput="calcNoteTotal()"><label>Juros (%)</label><input id="noteInterest" type="number" placeholder="Ex: 30" value="30" oninput="calcNoteTotal()"><label>Parcelas</label><select id="reqInstall"><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option><option>12</option></select><label>Data de vencimento</label><input id="noteDue" type="date"><label>Observação</label><textarea id="reqReason" placeholder="Ex: pagamento semanal, pix, combinado no WhatsApp"></textarea><div class="card okBox" style="margin:14px 0 0;padding:14px"><div class="row"><b>Valor</b><span id="notePreviewValue">R$ 0,00</span></div><div class="row"><b>Juros</b><span id="notePreviewInterest">0%</span></div><div class="row"><b>Total a receber</b><span id="notePreviewTotal" class="greenText">R$ 0,00</span></div></div><button class="btn green full" onclick="requestLoan()">Salvar empréstimo</button></div><div class="card"><h2>📋 Empréstimos anotados</h2><div id="uRequests"></div></div></div></section>
+    <section id="uPayments"><div class="card"><h2>💳 Pagamentos</h2><div id="uPaymentsList"></div></div></section>
+    <section id="uPlanos"><div class="grid2"><div class="card"><h2>🆓 Plano Gratuito</h2><p>Solicitações básicas, histórico simples e suporte comum.</p><div class="premiumBenefits"><span>✅ Controle básico de empréstimos</span><span>✅ Histórico simples</span><span>✅ Suporte comum</span></div><button class="btn free full" onclick="selectPlan('free')">Continuar no gratuito</button></div><div class="card okBox"><h2>👑 Plano Premium</h2><p>Libera limite maior, prioridade, relatórios e recursos avançados.</p><h3>R$ <span id="premiumPrice">29,90</span>/mês</h3><div class="pixBox"><b>📲 Pagamento via PIX</b><img id="pixQrImage" class="pixQr" alt="QR Code PIX"><div>Chave PIX:</div><div class="pixCopy" id="pixKeyShow">configure-no-admin@pix</div><div class="btnRow" style="justify-content:center;margin-top:12px"><button class="btn dark" onclick="copyPixKey()">Copiar PIX</button><button class="btn gold" onclick="requestPremium()">Já paguei / Solicitar ativação</button></div></div><div class="paymentSteps"><div>1️⃣ Escaneie o QR Code ou copie a chave PIX.</div><div>2️⃣ Faça o pagamento do plano.</div><div>3️⃣ Clique em “Já paguei” e aguarde o admin ativar.</div></div></div></div></section>
+    <section id="uProfile"><div class="grid2"><div class="card"><h2>👤 Meu perfil</h2><label>Nome</label><input id="profName"><label>Usuário</label><input id="profUser"><label>E-mail</label><input id="profEmail"><label>Telefone</label><input id="profPhone"><button class="btn green full" onclick="saveProfile()">Salvar alterações</button></div><div class="card"><h2>🔒 Alterar senha</h2><label>Senha atual</label><input id="oldPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('oldPass')">👁 Mostrar senha atual</button><label>Nova senha</label><input id="newPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('newPass')">👁 Mostrar nova senha</button><label>Confirmar nova senha</label><input id="newPass2" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('newPass2')">👁 Mostrar confirmação</button><button class="btn full" onclick="changePassword()">Alterar senha e sair</button><p style="color:#9bb4d5;font-weight:800;margin-top:12px">Por segurança, após alterar a senha você será desconectado.</p></div></div></section>
+    <section id="uSupport"><div class="card"><h2>💬 Suporte</h2><label>Mensagem</label><textarea id="supportMsg" placeholder="Digite sua dúvida"></textarea><button class="btn green full" onclick="sendSupport()">Enviar para administração</button><h3>Minhas mensagens</h3><div id="uSupportList"></div></div></section>
+
+    <section id="aDashboard"><div class="grid4"><div class="metric"><small>Usuários</small><b id="aUsers" class="blueText">0</b></div><div class="metric"><small>Premium</small><b id="aPremium" class="goldText">0</b></div><div class="metric"><small>Em aberto</small><b id="aOpen" class="redText">R$ 0,00</b></div><div class="metric"><small>Recebido</small><b id="aPaid" class="greenText">R$ 0,00</b></div></div><div class="grid2"><div class="card"><h2>📊 Relatório visual</h2><canvas id="adminChart"></canvas></div><div class="card"><h2>🔔 Notificações</h2><div id="aNotifications"></div></div></div></section>
+    <section id="aUsersSec"><div class="card"><h2>👥 Usuários e aprovações</h2><div class="tableWrap"><table><thead><tr><th>Nome</th><th>Usuário</th><th>Plano</th><th>Status</th><th>Ações</th></tr></thead><tbody id="aUsersTable"></tbody></table></div></div></section>
+    <section id="aLoans"><div class="card"><h2>💰 Empréstimos anotados e solicitações</h2><div class="tableWrap"><table><thead><tr><th>Usuário</th><th>Valor</th><th>Parcelas</th><th>Status</th><th>Ações</th></tr></thead><tbody id="aReqTable"></tbody></table></div></div><div class="card"><h2>📋 Empréstimos ativos/gerais</h2><div class="tableWrap"><table><thead><tr><th>Usuário</th><th>Cliente</th><th>Valor</th><th>Total</th><th>Vencimento</th><th>Status</th><th>Ações</th></tr></thead><tbody id="aLoansTable"></tbody></table></div></div></section>
+    <section id="aPlans"><div class="grid2"><div class="card"><h2>👑 Planos Premium/Free</h2><label>Valor Premium mensal</label><input id="cfgPremiumPrice" type="number"><label>Chave PIX</label><input id="cfgPix"><button class="btn green full" onclick="saveConfig()">Salvar configurações</button></div><div class="card"><h2>💳 Pagamentos Premium pendentes</h2><div id="premiumRequests"></div></div></div></section>
+    <section id="aReports"><div class="grid2"><div class="card"><h2>📊 Relatórios completos</h2><div id="reportBox"></div><div class="btnRow"><button class="btn" onclick="printReport()">Imprimir/PDF</button><button class="btn green" onclick="exportCSV()">Exportar CSV</button><button class="btn gold" onclick="exportBackup()">Backup JSON</button></div></div><div class="card"><h2>📄 Contratos/Comprovantes</h2><p>Gere contrato ou comprovante dos empréstimos pelo painel de empréstimos.</p><div id="docsList"></div></div></div></section>
+    <section id="aLogs"><div class="card"><h2>🛡️ Logs de auditoria</h2><div class="tableWrap"><table><thead><tr><th>Data</th><th>Usuário</th><th>Ação</th></tr></thead><tbody id="logsTable"></tbody></table></div></div></section>
+    <section id="aCleanup"><div class="grid2"><div class="card"><h2>🧹 Limpeza rápida</h2><div class="btnRow"><button class="btn dark" onclick="cleanup('notifications')">Limpar notificações</button><button class="btn dark" onclick="cleanup('rejected')">Limpar recusadas</button><button class="btn dark" onclick="cleanup('paid')">Limpar quitados</button><button class="btn dark" onclick="cleanup('oldlogs')">Limpar logs</button></div></div><div class="card dangerZone"><h2>⚠️ Zona de perigo</h2><p>Exige senha do admin.</p><div class="btnRow"><button class="btn red" onclick="danger('resetLoans')">Apagar empréstimos</button><button class="btn red" onclick="danger('resetUsers')">Apagar usuários comuns</button><button class="btn red" onclick="danger('resetAll')">Resetar sistema</button></div></div></div></section>
+    <section id="aSettings"><div class="grid2"><div class="card"><h2>☁️ Supabase</h2><p>Configuração visual pronta. Para banco real, cole URL e anon key e ajuste as tabelas.</p><label>Supabase URL</label><input id="cfgSupabaseUrl"><label>Supabase Anon Key</label><input id="cfgSupabaseKey"><button class="btn full" onclick="saveConfig()">Salvar</button><button class="btn green full" style="margin-top:10px" onclick="testSupabase()">Testar conexão Supabase</button><div class="syncStatus" id="syncStatus">Cole a URL sem /rest/v1 e a Publishable Key.</div></div><div class="card"><h2>📱 PWA Android</h2><p>Este arquivo registra um manifest e service worker. No Netlify, abra no Chrome Android e clique em “Instalar app”.</p><button class="btn green full" onclick="installInfo()">Como instalar</button></div></div><div class="card" style="margin-top:14px"><h2>👑 Segurança do Administrador</h2><p style="color:#9bb4d5;font-weight:800">Altere o login e a senha do administrador. Após salvar, o sistema sai da conta automaticamente.</p><div class="grid2"><div><label>Usuário atual</label><input id="adminCurrentUser"><label>Senha atual</label><input id="adminCurrentPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('adminCurrentPass')">👁 Mostrar senha atual</button></div><div><label>Novo usuário</label><input id="adminNewUser"><label>Nova senha</label><input id="adminNewPass" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('adminNewPass')">👁 Mostrar nova senha</button><label>Confirmar nova senha</label><input id="adminNewPass2" type="password"><button type="button" class="btn dark showPass" onclick="toggleSenha('adminNewPass2')">👁 Mostrar confirmação</button></div></div><button class="btn gold full" onclick="updateAdminCredentials()">Atualizar credenciais</button></div></section>
+
+    <section id="aDatabase">
+      <div class="grid4">
+        <div class="metric"><small>Logs locais</small><b id="dbLogsCount" class="blueText">0</b></div>
+        <div class="metric"><small>Lixeira local</small><b id="dbTrashCount" class="redText">0</b></div>
+        <div class="metric"><small>Backups</small><b id="dbBackupCount" class="goldText">0</b></div>
+        <div class="metric"><small>Status Banco</small><b id="dbStatusText" class="greenText">--</b></div>
+      </div>
+      <div class="grid2">
+        <div class="card okBox">
+          <h2>🗄️ Banco Total Supabase</h2>
+          <p style="color:#9bb4d5;font-weight:800">Central para enviar tudo ao banco: usuários, empréstimos, pagamentos, logs, suporte, premium, lixeira, caixa, backups, dispositivos e configurações.</p>
+          <div class="btnRow">
+            <button class="btn green" onclick="sincronizarTudoSupabase()">🔄 Sincronizar tudo agora</button>
+            <button class="btn gold" onclick="salvarBackupAutomatico('manual_painel');toast('Backup enviado ao Supabase')">💾 Backup no Supabase</button>
+            <button class="btn dark" onclick="testSupabase()">☁️ Testar banco</button>
+          </div>
+          <div class="dbHealth">
+            <div class="metric"><small>Usuários</small><b id="dbUsersCount">0</b></div>
+            <div class="metric"><small>Empréstimos</small><b id="dbLoansCount">0</b></div>
+            <div class="metric"><small>Pagamentos</small><b id="dbPayCount">0</b></div>
+            <div class="metric"><small>Suporte</small><b id="dbSupCount">0</b></div>
+          </div>
+        </div>
+        <div class="card dangerZone">
+          <h2>🗑️ Lixeira e Exclusões</h2>
+          <p style="color:#ffd0d5;font-weight:800">Quando um empréstimo é excluído, uma cópia é enviada para a tabela <b>lixeira</b> do Supabase antes de apagar.</p>
+          <div id="trashPreview"></div>
+          <div class="btnRow" style="margin-top:12px">
+            <button class="btn red" onclick="abrirTabelaSupabase('lixeira')">Abrir lixeira no Supabase</button>
+            <button class="btn dark" onclick="registrarAdminBanco('LIXEIRA_CONSULTADA','Admin abriu central de lixeira');toast('Log registrado')">Registrar consulta</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>📌 Tabelas cobertas pelo sistema</h2>
+        <div class="deployGrid" id="tablesCoverage"></div>
+      </div>
+    </section>
+
+
+    <section id="aBancoPix">
+      <div class="card okBox">
+        <h2>🏦 Banco/PIX vinculado ao celular</h2>
+        <p style="color:#9bb4d5;font-weight:800">Cadastre a conta/PIX que vai receber os pagamentos. O sistema gera cobrança com QR Code, copia a chave e envia pelo WhatsApp/compartilhamento do celular. Não coloque senha do banco aqui.</p>
+        <div>
+          <span class="secureTag">🔐 Protegido por PIN local</span>
+          <span class="secureTag">📱 Pronto para celular</span>
+          <span class="secureTag">🧾 Logs no Supabase</span>
+          <span class="secureTag">🚫 Sem senha bancária</span>
+        </div>
+      </div>
+      <div class="bankPixGrid" style="margin-top:14px">
+        <div class="card">
+          <h2>🔗 Vincular recebimento PIX</h2>
+          <div class="bankWarnBox">Use somente dados de recebimento: banco, titular e chave PIX. Por segurança, o Prime Cash não pede senha, token, código SMS nem acesso ao aplicativo do banco.</div>
+          <label>Banco / Carteira</label><input id="bankName" placeholder="Ex: Nubank, Inter, Caixa, Mercado Pago">
+          <label>Titular da conta</label><input id="bankOwner" placeholder="Nome do titular">
+          <label>Tipo da chave PIX</label><select id="bankPixType"><option>Telefone</option><option>E-mail</option><option>CPF/CNPJ</option><option>Chave aleatória</option></select>
+          <label>Chave PIX de recebimento</label><input id="bankPixKey" placeholder="Sua chave PIX">
+          <label>Telefone WhatsApp para enviar cobrança</label><input id="bankPhone" placeholder="Ex: 5583999999999">
+          <label>PIN de proteção do painel</label><input id="bankPin" type="password" placeholder="Crie um PIN de 4 a 8 números">
+          <button type="button" class="btn dark showPass" onclick="toggleSenha('bankPin')">👁 Mostrar/Ocultar PIN</button>
+          <button class="btn green full" onclick="salvarBancoPix()">🔐 Salvar banco/PIX vinculado</button>
+          <div class="syncStatus" id="bankPixStatus">Nenhum banco/PIX carregado ainda.</div>
+        </div>
+        <div class="card">
+          <h2>📲 Enviar cobrança PIX</h2>
+          <label>Cliente / descrição</label><input id="chargeClient" placeholder="Ex: João - parcela 1">
+          <label>Valor do PIX</label><input id="chargeValue" type="number" placeholder="Ex: 29.90">
+          <label>Mensagem</label><textarea id="chargeMessage" placeholder="Ex: Olá, segue o PIX para pagamento."></textarea>
+          <label>PIN para liberar envio</label><input id="chargePin" type="password" placeholder="Digite o PIN criado">
+          <div class="btnRow">
+            <button class="btn gold" onclick="gerarCobrancaPixProtegida()">📲 Gerar QR PIX</button>
+            <button class="btn dark" onclick="copiarPixVinculado()">📋 Copiar PIX</button>
+            <button class="btn green" onclick="enviarPixWhatsApp()">🟢 Enviar WhatsApp</button>
+          </div>
+          <div class="bankPixPreview" id="bankPixPreview">
+            <b>QR Code da cobrança</b>
+            <img id="bankChargeQr" alt="QR Code PIX protegido">
+            <div class="bankPixLine" id="bankChargeText">Gere uma cobrança para aparecer aqui.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>🛡️ Segurança do vínculo bancário</h2>
+        <div class="row"><span>Senha do banco</span><b class="redText">Nunca pedir</b></div>
+        <div class="row"><span>Token/SMS do banco</span><b class="redText">Nunca pedir</b></div>
+        <div class="row"><span>Chave PIX</span><b class="greenText">Permitido para receber</b></div>
+        <div class="row"><span>Envio pelo celular</span><b class="greenText">WhatsApp/Compartilhar</b></div>
+        <div class="row"><span>Registro</span><b>logs_admin + pix_cobrancas</b></div>
+        <button class="btn dark full" onclick="baixarSqlBancoPix()">📄 Baixar SQL das tabelas Banco/PIX</button>
+      </div>
+    </section>
+
+    <section id="aDeploy">
+      <div class="card okBox">
+        <h2>🚀 Central de Deploy Automático</h2>
+        <p style="color:#9bb4d5;font-weight:800">Use GitHub + Vercel para atualizar o Prime Cash automaticamente sempre que mudar o arquivo <b>index.html</b>.</p>
+        <div class="btnRow">
+          <button class="btn" onclick="window.open('https://github.com','_blank');registrarAdminBanco('ATALHO_GITHUB','Abriu GitHub')">📂 Abrir GitHub</button>
+          <button class="btn gold" onclick="window.open('https://github.com/new','_blank');registrarAdminBanco('ATALHO_NOVO_REPOSITORIO','Abriu criação de repositório')">➕ Novo Repositório</button>
+          <button class="btn green" onclick="window.open('https://vercel.com/dashboard','_blank');registrarAdminBanco('ATALHO_VERCEL','Abriu Vercel')">☁️ Abrir Vercel</button>
+          <button class="btn dark" onclick="window.open('https://vercel.com/new','_blank')">🚀 Novo Deploy</button>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card">
+          <h2>📋 Passo a passo</h2>
+          <div class="row"><span>1️⃣ Baixe o index atualizado</span><span class="statusDot">OK</span></div>
+          <div class="row"><span>2️⃣ Renomeie para index.html</span><span class="statusDot warnDot">Importante</span></div>
+          <div class="row"><span>3️⃣ Envie para o GitHub</span><span class="statusDot">Automático</span></div>
+          <div class="row"><span>4️⃣ Vercel publica sozinha</span><span class="statusDot">Deploy</span></div>
+        </div>
+        <div class="card">
+          <h2>🧾 Estrutura recomendada</h2>
+          <div class="quickCode">prime-cash/
+├── index.html
+├── README.md
+├── manifest.json
+└── assets/</div>
+          <button class="btn green full" style="margin-top:12px" onclick="baixarReadmeDeploy()">📄 Baixar README do projeto</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>🔗 Links rápidos</h2>
+        <div class="deployGrid">
+          <div class="deployBox"><b>GitHub</b><br><small>Guardar código e histórico.</small><br><button class="btn full" onclick="window.open('https://github.com','_blank')">Abrir</button></div>
+          <div class="deployBox"><b>Vercel</b><br><small>Hospedagem automática.</small><br><button class="btn green full" onclick="window.open('https://vercel.com/dashboard','_blank')">Abrir</button></div>
+          <div class="deployBox"><b>Supabase</b><br><small>Banco de dados do sistema.</small><br><button class="btn gold full" onclick="abrirSupabase()">Abrir</button></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+<div class="footerLabel hidden" id="footerLabel"></div>
+<footer class="pc-update-footer" id="pcUpdateFooter">
+  <div>
+    🚀 <b>Prime Cash em evolução constante</b><br>
+    O sistema recebe melhorias frequentes de segurança, desempenho e experiência. Durante atualizações, podem ocorrer erros, lentidão ou instabilidades temporárias.
+  </div>
+  <div class="pc-foot-grid">
+    <span class="pc-foot-pill" id="pcSystemVersion">💎 Versão: --</span>
+    <span class="pc-foot-pill" id="pcLastUpdate">📅 Atualizado: --</span>
+    <span class="pc-foot-pill" id="pcDeviceMode">📱 Modo: Navegador</span>
+    <span class="pc-foot-pill">🟢 Sistema Online</span>
+  </div>
+</footer>
+<div class="pc-browser-banner" id="pcBrowserBanner">
+  <div><b>📱 Prime Cash no celular</b><br><small>Acesse pelo navegador normalmente ou instale como aplicativo na tela inicial.</small></div>
+  <div class="btnRow"><button class="btn green" id="pcInstallBtn" type="button">Instalar app</button><button class="btn dark" type="button" onclick="dismissMobileBanner()">Agora não</button></div>
+</div>
+<div class="pc-update-modal" id="pcUpdateModal">
+  <div class="pc-update-box">
+    <h2>🚀 Prime Cash atualizado</h2>
+    <p id="pcUpdateText">Seu sistema recebeu melhorias.</p>
+    <ul>
+      <li>Rodapé automático com versão e data.</li>
+      <li>Modo celular pelo navegador e opção de instalação.</li>
+      <li>Aviso profissional de manutenção e possíveis instabilidades.</li>
+    </ul>
+    <button class="btn gold full" onclick="closeUpdateModal()">Entendi</button>
+  </div>
+</div>
+
+<script>
+
+const SYSTEM_VERSION='v7.3.0';
+const SYSTEM_BUILD_DATE=new Date().toLocaleDateString('pt-BR');
+let deferredInstallPrompt=null;
+function isStandaloneMode(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true}
+function updatePrimeCashFooter(){
+  const v=document.getElementById('pcSystemVersion'),d=document.getElementById('pcLastUpdate'),m=document.getElementById('pcDeviceMode'),f=document.getElementById('footerLabel');
+  const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(v)v.textContent='💎 Versão: '+SYSTEM_VERSION;
+  if(d)d.textContent='📅 Atualizado: '+SYSTEM_BUILD_DATE;
+  if(m)m.textContent=(mobile?'📱 Modo: Celular ':'💻 Modo: Computador ')+(isStandaloneMode()?'App instalado':'Navegador');
+  if(f)f.textContent='Prime Cash '+SYSTEM_VERSION+' • Atualizado em '+SYSTEM_BUILD_DATE+' • Atualizações contínuas podem causar instabilidades temporárias';
+}
+function showUpdateNoticeOnce(){
+  const key='primecash_seen_version';
+  const last=localStorage.getItem(key);
+  if(last!==SYSTEM_VERSION){
+    localStorage.setItem(key,SYSTEM_VERSION);
+    const modal=document.getElementById('pcUpdateModal');
+    const text=document.getElementById('pcUpdateText');
+    if(text)text.textContent='Seu sistema foi atualizado para '+SYSTEM_VERSION+'. Algumas funções podem passar por ajustes temporários.';
+    if(modal)modal.classList.add('show');
+  }
+}
+function closeUpdateModal(){document.getElementById('pcUpdateModal')?.classList.remove('show')}
+function dismissMobileBanner(){localStorage.setItem('primecash_mobile_banner_closed','1');document.getElementById('pcBrowserBanner')?.classList.remove('show')}
+function setupMobileBrowserMode(){
+  const banner=document.getElementById('pcBrowserBanner');
+  const installBtn=document.getElementById('pcInstallBtn');
+  const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(mobile&&!isStandaloneMode()&&localStorage.getItem('primecash_mobile_banner_closed')!=='1'){banner?.classList.add('show')}
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;if(mobile)banner?.classList.add('show')});
+  installBtn?.addEventListener('click',async()=>{
+    if(deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;dismissMobileBanner();return}
+    toast('No Chrome Android: toque no menu ⋮ e escolha “Adicionar à tela inicial”.');
+  });
+}
+window.addEventListener('load',()=>{updatePrimeCashFooter();setupMobileBrowserMode();showUpdateNoticeOnce()});
+
+const fmt=v=>(Number(v)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});let loginType='user',current=null,chart=null;
+const defaultState={config:{premiumPrice:29.90,pix:'configure-no-admin@pix',supabaseUrl:'',supabaseKey:''},users:[{id:'u_admin',name:'Administrador',email:'kilder.gamesrt@gmail.com',phone:'',username:'admin',pass:'1234',role:'admin',status:'approved',plan:'premium'},{id:'u_user',name:'João Silva',email:'usuario@primecash.local',phone:'',username:'usuario',pass:'0000',role:'user',status:'approved',plan:'free'}],requests:[],loans:[{id:'l1',userId:'u_user',client:'Cliente Exemplo',phone:'',value:500,interest:30,total:650,due:addDays(12),status:'active',installments:1,paid:0,note:'Exemplo de anotação'}],payments:[],support:[],premiumRequests:[],notifications:[],logs:[]};
+function addDays(n){let d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}function load(){let s=localStorage.getItem('primecash_final_host');if(!s){localStorage.setItem('primecash_final_host',JSON.stringify(defaultState));return structuredClone(defaultState)}try{return JSON.parse(s)}catch(e){return structuredClone(defaultState)}}function save(){localStorage.setItem('primecash_final_host',JSON.stringify(db))}let db=load();
+
+function loadSavedLogin(tipo){try{let saved=JSON.parse(localStorage.getItem('primecash_saved_login_'+tipo)||'null');let u=document.getElementById('loginUser'),p=document.getElementById('loginPass'),r=document.getElementById('rememberLogin');if(saved&&u&&p){u.value=saved.user||'';p.value=saved.pass||'';if(r)r.checked=true}else{if(u)u.value='';if(p)p.value='';if(r)r.checked=false}}catch(e){}}
+function saveRememberedLogin(tipo,user,pass){try{let r=document.getElementById('rememberLogin');if(r&&r.checked){localStorage.setItem('primecash_saved_login_'+tipo,JSON.stringify({user,pass,savedAt:new Date().toISOString()}));}else{localStorage.removeItem('primecash_saved_login_'+tipo)}}catch(e){}}
+async function sbResetAdminPassword(emailOrUser,tempPass){const sb=getSupabaseClient();if(!sb)return {ok:false,local:true};let q=String(emailOrUser||'').trim();let updates=[];try{let r1=await sb.from('usuarios').update({senha:tempPass}).or('email.eq.'+q+',usuario.eq.'+q+',tipo.eq.admin');updates.push(r1);let r2=await sb.from('usuarios').update({pass:tempPass}).or('email.eq.'+q+',usuario.eq.'+q+',role.eq.admin');updates.push(r2);return {ok:updates.some(r=>!r.error),updates}}catch(e){console.warn('Falha ao resetar no Supabase',e);return {ok:false,error:e}}}
+function toggleSenha(id){const campo=document.getElementById(id);if(!campo)return;campo.type=campo.type==='password'?'text':'password'}
+function cleanSupabaseUrl(url){return String(url||'').trim().replace(/\/rest\/v1\/?$/,'').replace(/\/+$/,'')}
+function getSupabaseClient(){try{const url=cleanSupabaseUrl(db?.config?.supabaseUrl);const key=String(db?.config?.supabaseKey||'').trim();if(!url||!key||!window.supabase)return null;return window.supabase.createClient(url,key)}catch(e){console.warn('Supabase client erro',e);return null}}
+function userPayload(u){return {nome:u.name||'',usuario:u.username||'',email:u.email||'',telefone:u.phone||'',senha:u.pass||'',plano:u.plan||'free',status:u.status||'pending',tipo:u.role||'user'}}
+function loanPayload(l){const u=db.users.find(x=>x.id===l.userId)||{};return {usuario:u.username||l.userId||'',cliente_nome:l.client||'',telefone:l.phone||'',valor:Number(l.value)||0,juros:Number(l.interest)||0,total:Number(l.total)||0,parcelas:Number(l.installments)||1,vencimento:l.due||null,status:l.status||'active',observacao:l.note||''}}
+function paymentPayload(p){const u=db.users.find(x=>x.id===p.userId)||{};return {usuario:u.username||p.userId||'',valor:Number(p.value)||0,forma:p.forma||p.type||'pix',status:p.status||'confirmado'}}
+async function sbInsert(table,payload){const sb=getSupabaseClient();if(!sb)return {ok:false,local:true};const {error}=await sb.from(table).insert(payload);if(error){console.error('Supabase insert '+table,error);toast('Erro Supabase '+table+': '+error.message);return {ok:false,error}}return {ok:true}}
+async function sbUpdateUserByUsername(username,payload){const sb=getSupabaseClient();if(!sb)return {ok:false,local:true};const {error}=await sb.from('usuarios').update(payload).eq('usuario',username);if(error){console.error('Supabase update usuarios',error);toast('Erro Supabase usuários: '+error.message);return {ok:false,error}}return {ok:true}}
+async function sbUpdateLoan(l,payload){const sb=getSupabaseClient();if(!sb)return {ok:false,local:true};const u=db.users.find(x=>x.id===l.userId)||{};let q=sb.from('emprestimos').update(payload).eq('usuario',u.username||'').eq('cliente_nome',l.client||'').eq('vencimento',l.due||null).eq('total',Number(l.total)||0);const {error}=await q;if(error){console.error('Supabase update emprestimos',error);toast('Erro Supabase empréstimos: '+error.message);return {ok:false,error}}return {ok:true}}
+async function sbDeleteLoan(l){const sb=getSupabaseClient();if(!sb)return {ok:false,local:true};const u=db.users.find(x=>x.id===l.userId)||{};const {error}=await sb.from('emprestimos').delete().eq('usuario',u.username||'').eq('cliente_nome',l.client||'').eq('vencimento',l.due||null).eq('total',Number(l.total)||0);if(error){console.error('Supabase delete emprestimos',error);toast('Erro Supabase ao excluir: '+error.message);return {ok:false,error}}return {ok:true}}
+async function testSupabase(){const sb=getSupabaseClient();const el=document.getElementById('syncStatus');if(!sb){toast('Informe URL e Publishable Key do Supabase');if(el)el.textContent='Supabase não configurado.';return}const {data,error}=await sb.from('usuarios').select('id').limit(1);if(error){toast('Erro na conexão: '+error.message);if(el)el.textContent='Erro: '+error.message;return}toast('Supabase conectado com sucesso');if(el)el.textContent='✅ Supabase conectado. Dados novos serão enviados para o banco.'}
+function log(action,user){db.logs.unshift({date:new Date().toLocaleString('pt-BR'),user:user||current?.username||'sistema',action});save()}function toast(t){let el=document.getElementById('toast');el.textContent=t;el.style.display='block';setTimeout(()=>el.style.display='none',3000)}function openLogin(t){loginType=t;document.getElementById('modalTitle').textContent=t==='admin'?'Login Administrador':'Login Usuário';document.getElementById('modalText').textContent=t==='admin'?'Acesso restrito ao painel administrativo.':'Acesso ao painel do cliente.';loadSavedLogin(t);document.getElementById('loginModal').classList.remove('hidden')}function closeModal(id){document.getElementById(id).classList.add('hidden')}function openSignup(){closeModal('loginModal');document.getElementById('signupModal').classList.remove('hidden')}function openRecovery(){closeModal('loginModal');document.getElementById('recoveryModal').classList.remove('hidden')}function doLogin(){let u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;let found=db.users.find(x=>(x.username===u||x.email===u)&&x.pass===p);if(!found)return toast('Senha ou usuário incorreto');if(found.status!=='approved')return toast('Cadastro ainda não aprovado');if(loginType==='admin'&&found.role!=='admin')return toast('Este acesso é apenas admin');if(loginType==='user'&&found.role==='admin')return toast('Use o acesso administrador');saveRememberedLogin(loginType,u,p);current=found;closeModal('loginModal');document.getElementById('login').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('footerLabel').classList.remove('hidden');log('Login realizado',found.username);renderApp()}function logout(){current=null;document.getElementById('app').classList.add('hidden');document.getElementById('footerLabel').classList.add('hidden');document.getElementById('login').classList.remove('hidden')}async function signup(){let name=suName.value.trim(),email=suEmail.value.trim(),username=suUser.value.trim(),pass=suPass.value;if(!name||!email||!username||pass.length<4)return toast('Preencha tudo. Senha mínima 4 caracteres.');if(db.users.some(u=>u.username===username||u.email===email))return toast('Usuário/e-mail já existe');let novoUser={id:'u_'+Date.now(),name,email,phone:'',username,pass,role:'user',status:'pending',plan:'free'};db.users.push(novoUser);await sbInsert('usuarios',userPayload(novoUser));db.notifications.unshift({id:'n'+Date.now(),text:'Novo cadastro aguardando aprovação: '+name,type:'signup'});log('Novo cadastro pendente: '+username,'sistema');save();closeModal('signupModal');toast('Cadastro enviado para aprovação')}async function recoverPassword(){let q=recUser.value.trim();let status=document.getElementById('recoveryStatus');if(!q)return toast('Informe usuário ou e-mail');let u=db.users.find(x=>x.username===q||x.email===q);let isAdminRequest=!!(u&&u.role==='admin')||q==='admin'||q==='novo_admin'||q==='kilder.gamesrt@gmail.com'||q==='admin@primecash.local';let temp='123456';if(!u&&isAdminRequest){u=db.users.find(x=>x.role==='admin');}
+if(!u){if(status)status.textContent='Usuário não encontrado no aparelho. Confira o e-mail/usuário.';return toast('Usuário não encontrado');}
+u.pass=temp;let idx=db.users.findIndex(x=>x.id===u.id);if(idx>=0)db.users[idx]=u;let sbResult={ok:false};if(u.role==='admin'||isAdminRequest){sbResult=await sbResetAdminPassword(q,temp);localStorage.setItem('primecash_saved_login_admin',JSON.stringify({user:u.username||'admin',pass:temp,savedAt:new Date().toISOString()}));}
+log('Senha recuperada para '+u.username,'recuperação');save();if(status)status.textContent=(u.role==='admin'?'Admin recuperado. ':'Senha recuperada. ')+'Use a senha temporária: '+temp+(sbResult.ok?' • Supabase atualizado.':' • Salvo no navegador.');toast('Senha temporária: '+temp);closeModal('recoveryModal');openLogin(u.role==='admin'?'admin':'user')}function renderApp(){sideName.textContent=current.name;sidePlan.textContent='● '+(current.role==='admin'?'Administrador':current.plan==='premium'?'Premium':'Gratuito');avatarEmoji.textContent=current.role==='admin'?'👑':'👤';welcome.textContent='Bem-vindo, '+current.name;renderNav();document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));openPage(current.role==='admin'?'aDashboard':'uDashboard')}function renderNav(){let items=current.role==='admin'?[['aDashboard','📊 Dashboard'],['aUsersSec','👥 Usuários'],['aLoans','💰 Empréstimos'],['aPlans','👑 Planos/PIX'],['aReports','📊 Relatórios'],['aLogs','🛡️ Logs'],['aCleanup','🧹 Limpeza'],['aDatabase','🗄️ Banco Total'],['aBancoPix','🏦 Banco/PIX'],['aDeploy','🚀 Deploy'],['aSettings','⚙️ Configurações']]:[['uDashboard','📊 Dashboard'],['uLoans','💸 Meus empréstimos'],['uRequest','📝 Anotar empréstimo'],['uPayments','💳 Pagamentos'],['uPlanos','👑 Plano'],['uProfile','👤 Perfil'],['uSupport','💬 Suporte']];nav.innerHTML=items.map((i,idx)=>`<button ${idx==0?'class="active"':''} onclick="openPage('${i[0]}',this)">${i[1]}</button>`).join('')+'<button onclick="logout()" style="color:#ff7b86">🚪 Sair</button>'}function openPage(id,btn){document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');pageTitle.textContent=(btn?btn.textContent.replace(/[📊💸➕💳👑👤💬👥💰🛡️🧹⚙️🚪]/g,'').trim():id);renderAll()}function renderAll(){if(!current)return;db=load();current=db.users.find(u=>u.id===current.id)||current;renderCommon();current.role==='admin'?renderAdmin():renderUser()}
+function updatePixQr(){
+  const img=document.getElementById('pixQrImage');
+  if(!img)return;
+  const key=String(db?.config?.pix||'configure-no-admin@pix').trim();
+  const price=Number(db?.config?.premiumPrice||29.90).toFixed(2);
+  const data='Prime Cash Premium | PIX: '+key+' | Valor: R$ '+price;
+  img.src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(data);
+}
+function copyPixKey(){
+  const key=String(db?.config?.pix||'').trim();
+  if(!key)return toast('Chave PIX não configurada');
+  if(navigator.clipboard){navigator.clipboard.writeText(key).then(()=>toast('Chave PIX copiada'));return;}
+  prompt('Copie a chave PIX:',key);
+}
+function renderPremiumStatusCard(){
+  const box=document.getElementById('premiumStatusCard');
+  if(!box||!current)return;
+  const pending=db.premiumRequests.some(p=>p.userId===current.id&&p.status==='pending');
+  if(current.plan==='premium'){
+    box.className='card premiumActionCard active';
+    box.innerHTML=`<h3>✅ Plano Premium ativo</h3><p>Seu acesso premium já está liberado.</p><div class="premiumBenefits"><span>🚀 Limite maior liberado</span><span>📊 Relatórios completos</span><span>⚡ Atendimento prioritário</span></div><button class="btn green full" onclick="openPage('uPlanos')">Ver detalhes do plano</button>`;
+  }else if(pending){
+    box.className='card premiumActionCard pending';
+    box.innerHTML=`<h3>⏳ Premium em análise</h3><p>Seu pedido foi enviado. Aguarde o administrador confirmar o pagamento.</p><button class="btn gold full" onclick="openPage('uPlanos')">Ver QR PIX</button>`;
+  }else{
+    box.className='card premiumActionCard';
+    box.innerHTML=`<h3>📲 Ativar Premium</h3><p>Faça o pagamento por QR PIX e libere limite maior, prioridade e relatórios.</p><button class="btn gold full" onclick="openPage('uPlanos')">Pagar com QR PIX</button>`;
+  }
+}
+function renderCommon(){clock.textContent=new Date().toLocaleString('pt-BR');premiumPrice.textContent=Number(db.config.premiumPrice).toFixed(2).replace('.',',');pixKeyShow.textContent=db.config.pix;updatePixQr()}setInterval(()=>{if(current)renderCommon()},1000);
+function myLoans(){return db.loans.filter(l=>l.userId===current.id)}function renderUser(){let loans=myLoans(),active=loans.filter(l=>l.status==='active'),open=active.reduce((a,l)=>a+(l.total-l.paid),0);uPlan.textContent=current.plan==='premium'?'Premium':'Gratuito';uPlan.className=current.plan==='premium'?'goldText':'blueText';uLimit.textContent=fmt(current.plan==='premium'?5000:800);uOpen.textContent=fmt(open);uDue.textContent=active[0]?.due||'Sem vencimento';uActiveLoan.innerHTML=active[0]?`<div class="row"><b>Total</b><span>${fmt(active[0].total)}</span></div><div class="row"><b>Pago</b><span>${fmt(active[0].paid)}</span></div><div class="progress"><div class="bar" style="width:${Math.min(100,(active[0].paid/active[0].total)*100)}%"></div></div>`:'<p>Nenhum empréstimo ativo.</p>';uLoansTable.innerHTML=loans.map(l=>`<tr><td>${l.client||'Sem nome'}</td><td>${l.phone||'-'}</td><td>${fmt(l.value)}</td><td>${fmt(l.total)}</td><td>${l.due||'-'}</td><td>${statusPill(l.status)}</td><td class="btnRow"><button class="btn green" onclick="markMyLoanPaid('${l.id}')">Pago</button><button class="btn dark" onclick="makeReceipt('${l.id}')">Comprovante</button><button class="btn red" onclick="deleteMyLoan('${l.id}')">Excluir</button></td></tr>`).join('')||'<tr><td colspan="7">Sem empréstimos anotados.</td></tr>';uRequests.innerHTML=loans.map(l=>`<div class="row"><span><b>${l.client||'Sem nome'}</b><br><small>${fmt(l.value)} → ${fmt(l.total)} • vence ${l.due||'-'}</small></span><span>${statusPill(l.status)}</span></div>`).join('')||'<p>Nenhuma anotação criada.</p>';uPaymentsList.innerHTML=db.payments.filter(p=>p.userId===current.id).map(p=>`<div class="row"><span>${p.date}</span><b>${fmt(p.value)}</b></div>`).join('')||'<p>Nenhum pagamento registrado.</p>';profName.value=current.name;profUser.value=current.username;profEmail.value=current.email;profPhone.value=current.phone||'';uSupportList.innerHTML=db.support.filter(s=>s.userId===current.id).map(s=>`<div class="row"><span>${s.msg}</span>${statusPill(s.status)}</div>`).join('')||'<p>Sem mensagens.</p>';renderPremiumStatusCard();updatePixQr()}
+function statusPill(s){let cls=s==='approved'||s==='active'||s==='paid'?'':s==='pending'?'free':'red';let txt={pending:'Pendente',approved:'Aprovado',rejected:'Recusado',active:'Ativo',paid:'Quitado',blocked:'Bloqueado'}[s]||s;return `<span class="pill ${cls}">${txt}</span>`}function calcNoteTotal(){let v=Number(document.getElementById('reqValue')?.value||0),j=Number(document.getElementById('noteInterest')?.value||0),t=v+(v*j/100);if(document.getElementById('notePreviewValue'))notePreviewValue.textContent=fmt(v);if(document.getElementById('notePreviewInterest'))notePreviewInterest.textContent=j+'%';if(document.getElementById('notePreviewTotal'))notePreviewTotal.textContent=fmt(t)}async function requestLoan(){let client=(document.getElementById('noteClient')?.value||'').trim(),phone=(document.getElementById('notePhone')?.value||'').trim(),value=Number(reqValue.value),interest=Number(document.getElementById('noteInterest')?.value||0),installments=Number(reqInstall.value),reason=reqReason.value.trim(),due=(document.getElementById('noteDue')?.value||addDays(30));if(!client)return toast('Informe o nome do cliente');if(!value||value<1)return toast('Informe o valor emprestado');if(interest<0)return toast('Juros inválido');let total=Math.round((value+(value*interest/100))*100)/100;let novoLoan={id:'l'+Date.now(),userId:current.id,client,phone,value,interest,total,due,status:'active',installments,paid:0,note:reason,created:new Date().toLocaleDateString('pt-BR'),private:true};db.loans.unshift(novoLoan);await sbInsert('emprestimos',loanPayload(novoLoan));log('Anotou empréstimo de '+client+' no valor '+fmt(value));save();['noteClient','notePhone','reqValue','reqReason'].forEach(id=>{let el=document.getElementById(id);if(el)el.value=''});if(document.getElementById('noteInterest'))noteInterest.value='30';if(document.getElementById('noteDue'))noteDue.value='';calcNoteTotal();renderAll();toast('Empréstimo anotado com sucesso')}async function requestPremium(){db.premiumRequests.unshift({id:'p'+Date.now(),userId:current.id,value:db.config.premiumPrice,status:'pending',date:new Date().toLocaleDateString('pt-BR')});db.notifications.unshift({id:'n'+Date.now(),text:`Solicitação Premium de ${current.name}`,type:'premium'});await sbInsert('notificacoes',{titulo:'Solicitação Premium',mensagem:'Solicitação Premium de '+current.name,tipo:'premium',lida:false});log('Solicitou upgrade premium');save();toast('Solicitação Premium enviada. Faça PIX e aguarde aprovação.')}function selectPlan(p){toast(p==='free'?'Você está no plano gratuito':'Plano selecionado')}async function saveProfile(){let antigoUsuario=current.username;let novoUsuario=profUser.value.trim();if(!profName.value.trim())return toast('Informe seu nome');if(!novoUsuario)return toast('Informe um usuário');if(db.users.some(u=>u.id!==current.id&&u.username===novoUsuario))return toast('Esse usuário já está em uso');current.name=profName.value.trim();current.username=novoUsuario;current.email=profEmail.value.trim();current.phone=profPhone.value.trim();let idx=db.users.findIndex(u=>u.id===current.id);db.users[idx]=current;await sbUpdateUserByUsername(antigoUsuario,userPayload(current));log('Atualizou perfil/login');save();renderApp();toast('Perfil salvo')}async function changePassword(){if(oldPass.value!==current.pass)return toast('Senha atual incorreta');if(newPass.value.length<4)return toast('Nova senha muito curta');if(newPass.value!==newPass2.value)return toast('Confirmação diferente');let antigoUsuario=current.username;current.pass=newPass.value;db.users[db.users.findIndex(u=>u.id===current.id)]=current;await sbUpdateUserByUsername(antigoUsuario,{senha:current.pass});log('Alterou senha');save();oldPass.value=newPass.value=newPass2.value='';alert('Senha alterada com sucesso. Faça login novamente.');logout()}async function sendSupport(){if(!supportMsg.value.trim())return toast('Digite uma mensagem');db.support.unshift({id:'s'+Date.now(),userId:current.id,msg:supportMsg.value,status:'pending',date:new Date().toLocaleDateString('pt-BR')});db.notifications.unshift({id:'n'+Date.now(),text:`Mensagem de suporte: ${current.name}`,type:'support'});await sbInsert('notificacoes',{titulo:'Suporte',mensagem:'Mensagem de suporte: '+current.name,tipo:'support',lida:false});log('Enviou suporte');save();supportMsg.value='';renderAll();toast('Mensagem enviada')}
+async function markMyLoanPaid(id){let l=db.loans.find(x=>x.id===id&&x.userId===current.id);if(!l)return toast('Registro não encontrado');l.status='paid';l.paid=l.total;let novoPag={id:'pay'+Date.now(),loanId:id,userId:current.id,value:l.total,date:new Date().toLocaleDateString('pt-BR'),type:'anotacao'};db.payments.unshift(novoPag);await sbUpdateLoan(l,{status:'paid'});await sbInsert('pagamentos',paymentPayload(novoPag));log('Marcou empréstimo como pago: '+(l.client||id));save();renderAll();toast('Marcado como pago')}async function deleteMyLoan(id){let l=db.loans.find(x=>x.id===id&&x.userId===current.id);if(!l)return toast('Registro não encontrado');if(!confirm('Excluir esta anotação?'))return;await sbDeleteLoan(l);db.loans=db.loans.filter(x=>!(x.id===id&&x.userId===current.id));log('Excluiu anotação de empréstimo');save();renderAll();toast('Anotação excluída')}function renderAdmin(){let users=db.users.filter(u=>u.role!=='admin'),premium=users.filter(u=>u.plan==='premium').length,open=db.loans.filter(l=>l.status==='active').reduce((a,l)=>a+l.total-l.paid,0),paid=db.payments.reduce((a,p)=>a+p.value,0);aUsers.textContent=users.length;aPremium.textContent=premium;aOpen.textContent=fmt(open);aPaid.textContent=fmt(paid);aNotifications.innerHTML=db.notifications.slice(0,8).map(n=>`<div class="row"><span>${n.text}</span><button class="btn dark" onclick="removeNotif('${n.id}')">OK</button></div>`).join('')||'<p>Sem notificações.</p>';renderChart(users.length,premium,db.requests.filter(r=>r.status==='pending').length,db.loans.filter(l=>l.status==='active').length);aUsersTable.innerHTML=db.users.filter(u=>u.role!=='admin').map(u=>`<tr><td>${u.name}</td><td>${u.username}</td><td>${u.plan==='premium'?'<span class="pill premium">Premium</span>':'<span class="pill free">Free</span>'}</td><td>${statusPill(u.status)}</td><td class="btnRow"><button class="btn green" onclick="approveUser('${u.id}')">Aprovar</button><button class="btn gold" onclick="togglePlan('${u.id}')">Plano</button><button class="btn dark" onclick="resetUserPass('${u.id}')">Resetar senha</button><button class="btn red" onclick="blockUser('${u.id}')">Bloquear</button></td></tr>`).join('');aReqTable.innerHTML=db.requests.map(r=>{let u=db.users.find(x=>x.id===r.userId)||{};return `<tr><td>${u.name}</td><td>${fmt(r.value)}</td><td>${r.installments}x</td><td>${statusPill(r.status)}</td><td class="btnRow"><button class="btn green" onclick="approveLoan('${r.id}')">Aprovar</button><button class="btn red" onclick="rejectReq('${r.id}')">Recusar</button></td></tr>`}).join('')||'<tr><td colspan="5">Sem solicitações.</td></tr>';aLoansTable.innerHTML=db.loans.map(l=>{let u=db.users.find(x=>x.id===l.userId)||{};return `<tr><td>${u.name}</td><td>${l.client||'Privado'}</td><td>${fmt(l.value)}</td><td>${fmt(l.total)}</td><td>${l.due}</td><td>${statusPill(l.status)}</td><td class="btnRow"><button class="btn green" onclick="markPaid('${l.id}')">Quitar</button><button class="btn dark" onclick="makeContract('${l.id}')">Contrato</button><button class="btn dark" onclick="makeReceipt('${l.id}')">Comprovante</button></td></tr>`}).join('');cfgPremiumPrice.value=db.config.premiumPrice;cfgPix.value=db.config.pix;cfgSupabaseUrl.value=db.config.supabaseUrl||'';cfgSupabaseKey.value=db.config.supabaseKey||'';if(typeof adminCurrentUser!=='undefined'){adminCurrentUser.value=current.username;adminNewUser.value=current.username;}premiumRequests.innerHTML=db.premiumRequests.map(p=>{let u=db.users.find(x=>x.id===p.userId)||{};return `<div class="row"><span>${u.name} • ${fmt(p.value)}</span><span>${statusPill(p.status)} <button class="btn gold" onclick="approvePremium('${p.id}')">Ativar</button></span></div>`}).join('')||'<p>Sem pedidos premium.</p>';logsTable.innerHTML=db.logs.slice(0,100).map(l=>`<tr><td>${l.date}</td><td>${l.user}</td><td>${l.action}</td></tr>`).join('');let total=db.loans.reduce((a,l)=>a+l.total,0);reportBox.innerHTML=`<div class="row"><b>Total em contratos</b><span>${fmt(total)}</span></div><div class="row"><b>Recebido</b><span>${fmt(paid)}</span></div><div class="row"><b>Em aberto</b><span>${fmt(open)}</span></div><div class="row"><b>Solicitações pendentes</b><span>${db.requests.filter(r=>r.status==='pending').length}</span></div>`;docsList.innerHTML=db.loans.slice(0,5).map(l=>`<div class="row"><span>${l.id}</span><button class="btn dark" onclick="makeContract('${l.id}')">Gerar contrato</button></div>`).join('')}
+async function updateAdminCredentials(){let antigoUsuario=current.username;let atual=adminCurrentUser.value.trim(),senhaAtual=adminCurrentPass.value,novo=adminNewUser.value.trim(),nova=adminNewPass.value,conf=adminNewPass2.value;if(atual!==current.username)return toast('Usuário atual incorreto');if(senhaAtual!==current.pass)return toast('Senha atual incorreta');if(!novo)return toast('Informe o novo usuário');if(db.users.some(u=>u.id!==current.id&&u.username===novo))return toast('Esse usuário já existe');if(nova.length<4)return toast('Nova senha muito curta');if(nova!==conf)return toast('Confirmação de senha diferente');current.username=novo;current.pass=nova;db.users[db.users.findIndex(u=>u.id===current.id)]=current;await sbUpdateUserByUsername(antigoUsuario,userPayload(current));log('Administrador alterou login/senha');save();alert('Credenciais do administrador atualizadas. Faça login novamente.');logout()}function renderChart(users,premium,req,loans){let ctx=document.getElementById('adminChart');if(!ctx)return;if(chart)chart.destroy();chart=new Chart(ctx,{type:'bar',data:{labels:['Usuários','Premium','Pendentes','Ativos'],datasets:[{label:'Prime Cash',data:[users,premium,req,loans]}]},options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}})}async function approveUser(id){let u=db.users.find(x=>x.id===id);u.status='approved';await sbUpdateUserByUsername(u.username,{status:u.status});log('Aprovou usuário '+u.username);save();renderAll()}async function blockUser(id){let u=db.users.find(x=>x.id===id);u.status=u.status==='blocked'?'approved':'blocked';await sbUpdateUserByUsername(u.username,{status:u.status});log('Alterou bloqueio de '+u.username);save();renderAll()}async function togglePlan(id){let u=db.users.find(x=>x.id===id);u.plan=u.plan==='premium'?'free':'premium';await sbUpdateUserByUsername(u.username,{plano:u.plan});log('Alterou plano de '+u.username+' para '+u.plan);save();renderAll()}async function resetUserPass(id){let u=db.users.find(x=>x.id===id);u.pass='123456';await sbUpdateUserByUsername(u.username,{senha:u.pass});log('Resetou senha de '+u.username);save();toast('Senha temporária: 123456')}function approveLoan(id){let r=db.requests.find(x=>x.id===id);if(!r||r.status!=='pending')return;let total=Math.round(r.value*(r.installments>1?1.35:1.30));db.loans.unshift({id:'l'+Date.now(),userId:r.userId,value:r.value,total,due:addDays(30),status:'active',installments:r.installments,paid:0});r.status='approved';log('Aprovou empréstimo '+fmt(r.value));save();renderAll()}function rejectReq(id){let r=db.requests.find(x=>x.id===id);r.status='rejected';log('Recusou solicitação');save();renderAll()}async function markPaid(id){let l=db.loans.find(x=>x.id===id);l.status='paid';l.paid=l.total;let novoPag={id:'pay'+Date.now(),loanId:id,userId:l.userId,value:l.total,date:new Date().toLocaleDateString('pt-BR')};db.payments.unshift(novoPag);await sbUpdateLoan(l,{status:'paid'});await sbInsert('pagamentos',paymentPayload(novoPag));log('Quitou empréstimo '+id);save();renderAll()}async function approvePremium(id){let p=db.premiumRequests.find(x=>x.id===id);let u=db.users.find(x=>x.id===p.userId);p.status='approved';u.plan='premium';let novoPag={id:'prem'+Date.now(),userId:u.id,value:Number(p.value),date:new Date().toLocaleDateString('pt-BR'),type:'premium'};db.payments.unshift(novoPag);await sbUpdateUserByUsername(u.username,{plano:'premium'});await sbInsert('pagamentos',paymentPayload(novoPag));log('Ativou premium para '+u.username);save();renderAll()}function removeNotif(id){db.notifications=db.notifications.filter(n=>n.id!==id);save();renderAll()}function saveConfig(){db.config.premiumPrice=Number(cfgPremiumPrice?.value||db.config.premiumPrice);db.config.pix=cfgPix?.value||db.config.pix;db.config.supabaseUrl=cleanSupabaseUrl(cfgSupabaseUrl?.value||db.config.supabaseUrl);db.config.supabaseKey=cfgSupabaseKey?.value||db.config.supabaseKey;log('Salvou configurações');save();renderAll();toast('Configurações salvas')}function cleanup(type){if(type==='notifications')db.notifications=[];if(type==='rejected')db.requests=db.requests.filter(r=>r.status!=='rejected');if(type==='paid')db.loans=db.loans.filter(l=>l.status!=='paid');if(type==='oldlogs')db.logs=db.logs.slice(0,10);log('Limpeza: '+type);save();renderAll();toast('Limpeza concluída')}function danger(type){document.getElementById('confirmModal').classList.remove('hidden');confirmBtn.onclick=()=>{if(confirmPass.value!==(db.users.find(u=>u.role==='admin')?.pass||'1234'))return toast('Senha admin incorreta');if(type==='resetLoans'){db.loans=[];db.requests=[];db.payments=[]}if(type==='resetUsers'){db.users=db.users.filter(u=>u.role==='admin')}if(type==='resetAll'){localStorage.removeItem('primecash_final_host');db=load();closeModal('confirmModal');logout();return}log('Zona de perigo executada: '+type);confirmPass.value='';closeModal('confirmModal');save();renderAll();toast('Ação concluída')}}function exportBackup(){download('primecash-backup.json',JSON.stringify(db,null,2),'application/json');log('Exportou backup')}function exportCSV(){let rows=['usuario,valor,total,vencimento,status'];db.loans.forEach(l=>{let u=db.users.find(x=>x.id===l.userId)||{};rows.push(`${u.username},${l.value},${l.total},${l.due},${l.status}`)});download('primecash-relatorio.csv',rows.join('\n'),'text/csv');log('Exportou CSV')}function download(name,data,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click()}function printReport(){window.print()}function makeContract(id){let l=db.loans.find(x=>x.id===id),u=db.users.find(x=>x.id===l.userId);let html=`<h1>Contrato Prime Cash</h1><p>Usuário: ${u.name}</p><p>Cliente: ${l.client||'Não informado'}</p><p>Telefone: ${l.phone||'-'}</p><p>Valor: ${fmt(l.value)}</p><p>Total: ${fmt(l.total)}</p><p>Vencimento: ${l.due}</p><p>Status: ${l.status}</p>`;download('contrato-'+id+'.html',html,'text/html')}function makeReceipt(id){let l=db.loans.find(x=>x.id===id),u=db.users.find(x=>x.id===l.userId);let html=`<h1>Comprovante Prime Cash</h1><p>Cliente: ${u.name}</p><p>Total: ${fmt(l.total)}</p><p>Pago: ${fmt(l.paid)}</p><p>Status: ${l.status}</p>`;download('comprovante-'+id+'.html',html,'text/html')}function installInfo(){toast(isStandaloneMode()?'App já está em modo instalado.':'No Android: abra no Chrome > menu ⋮ > Adicionar à tela inicial. Também pode usar o botão verde de instalação quando aparecer.')}function registerPWA(){let manifest={name:'Prime Cash Pro',short_name:'Prime Cash',start_url:'.',scope:'./',display:'standalone',display_override:['standalone','minimal-ui','browser'],orientation:'portrait',background_color:'#020712',theme_color:'#07172c',description:'Sistema Prime Cash Pro para navegador, celular e app instalado.',icons:[]};let murl=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/json'}));let link=document.createElement('link');link.rel='manifest';link.href=murl;document.head.appendChild(link);if('serviceWorker'in navigator){let sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>{});`;navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{})}}
+/* === Prime Cash v5.1 - Banco total Supabase === */
+const PRIME_DB_TABLES = {
+  logs:'logs', logsAdmin:'logs_admin', lixeira:'lixeira', caixa:'caixa', dashboard:'dashboard_historico', dispositivos:'dispositivos', backups:'backups', suporte:'suporte', premium:'premium_pedidos', configuracoes:'configuracoes', recuperacao:'recuperacao_senha', clientes:'clientes'
+};
+function sbBrowser(){return (navigator.userAgent||'').slice(0,250)}
+function sbUserName(){return current?.username || current?.email || 'sistema'}
+async function sbTry(table, payload){
+  try{
+    const sb=getSupabaseClient();
+    if(!sb)return {ok:false,local:true};
+    const {data,error}=await sb.from(table).insert(payload).select().limit(1);
+    if(error){console.warn('Supabase '+table,error.message);return {ok:false,error};}
+    return {ok:true,data};
+  }catch(e){console.warn('Supabase '+table,e);return {ok:false,error:e};}
+}
+async function sbConfigSet(chave, valor){
+  try{
+    const sb=getSupabaseClient(); if(!sb)return {ok:false,local:true};
+    const {error}=await sb.from('configuracoes').upsert({chave,valor:String(valor),created_at:new Date().toISOString()},{onConflict:'chave'});
+    if(error){console.warn('configuracoes',error.message);return {ok:false,error};}
+    return {ok:true};
+  }catch(e){return {ok:false,error:e};}
+}
+async function registrarLogBanco(acao, detalhes='', tipo='INFO', tabela='', registro_id=''){
+  const payload={usuario:sbUserName(),tipo,acao,tabela_afetada:tabela,registro_id:String(registro_id||''),detalhes:typeof detalhes==='string'?detalhes:JSON.stringify(detalhes),nivel: tipo==='ERRO'?'warning':(tipo==='EXCLUSAO'?'critical':'info'),navegador:sbBrowser()};
+  return sbTry('logs', payload);
+}
+async function registrarAdminBanco(acao, detalhes=''){
+  return sbTry('logs_admin',{admin_usuario:sbUserName(),acao,detalhes:typeof detalhes==='string'?detalhes:JSON.stringify(detalhes)});
+}
+async function mandarParaLixeira(tabela, dados){
+  return sbTry('lixeira',{tabela_origem:tabela,dados,excluido_por:sbUserName()});
+}
+async function registrarCaixa(descricao, entrada=0, saida=0){
+  const saldo=(Number(entrada)||0)-(Number(saida)||0);
+  return sbTry('caixa',{descricao,entrada:Number(entrada)||0,saida:Number(saida)||0,saldo});
+}
+async function salvarDashboardHistorico(){
+  const totalEmp=(db.loans||[]).reduce((a,l)=>a+(Number(l.value)||0),0);
+  const totalRec=(db.payments||[]).reduce((a,p)=>a+(Number(p.value)||0),0);
+  const lucro=(db.loans||[]).reduce((a,l)=>a+((Number(l.total)||0)-(Number(l.value)||0)),0);
+  return sbTry('dashboard_historico',{data_ref:new Date().toISOString().slice(0,10),total_emprestado:totalEmp,total_recebido:totalRec,lucro});
+}
+async function salvarDispositivo(){
+  return sbTry('dispositivos',{usuario:sbUserName(),aparelho:/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)?'celular':'computador',navegador:sbBrowser()});
+}
+async function salvarBackupAutomatico(motivo='manual'){
+  return sbTry('backups',{usuario:sbUserName(),dados:{motivo,versao:SYSTEM_VERSION,db,criado_em:new Date().toISOString()}});
+}
+async function salvarClienteDoEmprestimo(cliente, telefone){
+  if(!cliente)return;
+  return sbTry('clientes',{usuario:sbUserName(),nome:cliente,telefone:telefone||'',observacao:'Criado automaticamente por empréstimo'});
+}
+const _pcOldLog = log;
+log = function(action,user){
+  try{_pcOldLog(action,user)}catch(e){}
+  registrarLogBanco(action,{user:user||sbUserName()},'INFO');
+};
+const _pcOldDoLogin = doLogin;
+doLogin = function(){
+  const before=current?.username;
+  _pcOldDoLogin();
+  if(current && current.username!==before){
+    registrarLogBanco('LOGIN_SUCESSO','Login realizado','LOGIN','usuarios',current.id||'');
+    salvarDispositivo();
+  }
+};
+const _pcOldLogout = logout;
+logout = function(){registrarLogBanco('LOGOUT','Usuário saiu','LOGIN'); _pcOldLogout();};
+const _pcOldRequestLoan = requestLoan;
+requestLoan = async function(){
+  const cliente=(document.getElementById('noteClient')?.value||'').trim();
+  const telefone=(document.getElementById('notePhone')?.value||'').trim();
+  const valor=Number(document.getElementById('reqValue')?.value||0);
+  await _pcOldRequestLoan();
+  if(cliente && valor>0){
+    await salvarClienteDoEmprestimo(cliente,telefone);
+    await registrarCaixa('Empréstimo criado para '+cliente,0,valor);
+    await salvarDashboardHistorico();
+    await registrarLogBanco('EMPRESTIMO_CRIADO',{cliente,telefone,valor},'FINANCEIRO','emprestimos');
+  }
+};
+const _pcOldMarkMyLoanPaid = markMyLoanPaid;
+markMyLoanPaid = async function(id){
+  const l=(db.loans||[]).find(x=>x.id===id);
+  await _pcOldMarkMyLoanPaid(id);
+  if(l){await registrarCaixa('Recebimento de empréstimo '+(l.client||id),Number(l.total)||0,0); await salvarDashboardHistorico(); await registrarLogBanco('EMPRESTIMO_QUITADO',l,'FINANCEIRO','emprestimos',id);}
+};
+const _pcOldDeleteMyLoan = deleteMyLoan;
+deleteMyLoan = async function(id){
+  const l=JSON.parse(JSON.stringify((db.loans||[]).find(x=>x.id===id)||{}));
+  if(l.id){await mandarParaLixeira('emprestimos',l); await registrarLogBanco('EMPRESTIMO_EXCLUIDO',l,'EXCLUSAO','emprestimos',id);}
+  await _pcOldDeleteMyLoan(id);
+};
+const _pcOldSendSupport = sendSupport;
+sendSupport = async function(){
+  const msg=(document.getElementById('supportMsg')?.value||'').trim();
+  await _pcOldSendSupport();
+  if(msg){await sbTry('suporte',{usuario:sbUserName(),mensagem:msg,status:'pending'}); await registrarLogBanco('SUPORTE_ENVIADO',msg,'SUPORTE','suporte');}
+};
+const _pcOldRequestPremium = requestPremium;
+requestPremium = async function(){
+  await _pcOldRequestPremium();
+  await sbTry('premium_pedidos',{usuario:sbUserName(),valor:Number(db.config.premiumPrice)||0,status:'pending',comprovante:'Aguardando confirmação'});
+  await registrarLogBanco('PREMIUM_SOLICITADO',{valor:db.config.premiumPrice},'PREMIUM','premium_pedidos');
+};
+const _pcOldSaveConfig = saveConfig;
+saveConfig = function(){
+  _pcOldSaveConfig();
+  sbConfigSet('premiumPrice',db.config.premiumPrice);
+  sbConfigSet('pix',db.config.pix);
+  sbConfigSet('supabaseUrl',db.config.supabaseUrl);
+  registrarAdminBanco('CONFIG_ATUALIZADA',{premiumPrice:db.config.premiumPrice,pix:db.config.pix});
+  registrarLogBanco('CONFIG_ATUALIZADA','Configurações salvas','ADMIN','configuracoes');
+};
+const _pcOldExportBackup = exportBackup;
+exportBackup = function(){_pcOldExportBackup(); salvarBackupAutomatico('export_manual'); registrarLogBanco('BACKUP_EXPORTADO','Backup baixado e enviado ao banco','BACKUP','backups');};
+const _pcOldExportCSV = exportCSV;
+exportCSV = function(){_pcOldExportCSV(); registrarLogBanco('CSV_EXPORTADO','CSV exportado','RELATORIO');};
+const _pcOldPrintReport = printReport;
+printReport = function(){registrarLogBanco('RELATORIO_IMPRESSO','Relatório/PDF gerado','RELATORIO'); _pcOldPrintReport();};
+const _pcOldCleanup = cleanup;
+cleanup = function(type){registrarAdminBanco('LIMPEZA_'+type,{tipo:type}); registrarLogBanco('LIMPEZA_'+type,'Limpeza executada','ADMIN'); _pcOldCleanup(type);};
+const _pcOldDanger = danger;
+danger = function(type){registrarAdminBanco('ZONA_PERIGO_'+type,{tipo:type}); registrarLogBanco('ZONA_PERIGO_'+type,'Ação sensível solicitada','ADMIN'); _pcOldDanger(type);};
+const _pcOldApprovePremium = approvePremium;
+approvePremium = async function(id){await _pcOldApprovePremium(id); await registrarAdminBanco('PREMIUM_APROVADO',{id}); await registrarLogBanco('PREMIUM_APROVADO',{id},'PREMIUM','premium_pedidos',id);};
+const _pcOldApproveUser = approveUser;
+approveUser = async function(id){await _pcOldApproveUser(id); await registrarAdminBanco('USUARIO_APROVADO',{id}); await registrarLogBanco('USUARIO_APROVADO',{id},'ADMIN','usuarios',id);};
+const _pcOldBlockUser = blockUser;
+blockUser = async function(id){await _pcOldBlockUser(id); await registrarAdminBanco('USUARIO_BLOQUEIO_ALTERADO',{id});};
+const _pcOldTogglePlan = togglePlan;
+togglePlan = async function(id){await _pcOldTogglePlan(id); await registrarAdminBanco('PLANO_ALTERADO',{id});};
+const _pcOldRecoverPassword = recoverPassword;
+recoverPassword = async function(){
+  const q=(document.getElementById('recUser')?.value||'').trim();
+  await sbTry('recuperacao_senha',{usuario:q,email:q,token:'local-temp-123456',utilizado:true});
+  await _pcOldRecoverPassword();
+  await registrarLogBanco('RECUPERACAO_SENHA',{usuario:q},'SEGURANCA','recuperacao_senha');
+};
+async function sincronizarTudoSupabase(){
+  toast('Sincronizando tudo com Supabase...');
+  let total=0;
+  for(const u of (db.users||[])){await sbInsert('usuarios',userPayload(u)); total++;}
+  for(const l of (db.loans||[])){await sbInsert('emprestimos',loanPayload(l)); await salvarClienteDoEmprestimo(l.client,l.phone); total++;}
+  for(const p of (db.payments||[])){await sbInsert('pagamentos',paymentPayload(p)); total++;}
+  for(const s of (db.support||[])){await sbTry('suporte',{usuario:(db.users.find(u=>u.id===s.userId)||{}).username||s.userId,mensagem:s.msg,status:s.status||'pending'}); total++;}
+  for(const pr of (db.premiumRequests||[])){await sbTry('premium_pedidos',{usuario:(db.users.find(u=>u.id===pr.userId)||{}).username||pr.userId,valor:Number(pr.value)||0,status:pr.status||'pending',comprovante:'sincronizado'}); total++;}
+  for(const n of (db.notifications||[])){await sbInsert('notificacoes',{titulo:n.type||'Notificação',mensagem:n.text||'',tipo:n.type||'',lida:false}); total++;}
+  for(const lg of (db.logs||[])){await sbTry('logs',{usuario:lg.user||'sistema',acao:lg.action||'',detalhes:'Log local sincronizado',tipo:'SYNC'}); total++;}
+  await salvarDashboardHistorico(); await salvarDispositivo(); await salvarBackupAutomatico('sync_total'); await registrarLogBanco('SINCRONIZACAO_TOTAL','Dados locais enviados ao Supabase','SYNC');
+  toast('Sincronização concluída: '+total+' registros processados');
+}
+function instalarBotaoSyncTotal(){
+  const box=document.getElementById('syncStatus');
+  if(box && !document.getElementById('syncAllBtn')){
+    const btn=document.createElement('button');btn.id='syncAllBtn';btn.className='btn gold full';btn.style.marginTop='10px';btn.textContent='🔄 Sincronizar tudo com Supabase';btn.onclick=sincronizarTudoSupabase;box.parentNode.appendChild(btn);
+  }
+}
+window.addEventListener('load',()=>{setTimeout(instalarBotaoSyncTotal,800); salvarDispositivo();});
+setInterval(()=>{if(current)salvarDashboardHistorico()},300000);
+
+
+/* === Prime Cash v6.2 - UI Banco Total + Deploy === */
+function pcSafeCount(x){return Array.isArray(x)?x.length:0}
+function atualizarPainelBancoTotal(){
+  const set=(id,val)=>{const el=document.getElementById(id); if(el)el.textContent=val};
+  set('dbLogsCount', pcSafeCount(db.logs));
+  set('dbTrashCount', localStorage.getItem('primecash_lixeira_count')||'Supabase');
+  set('dbBackupCount', localStorage.getItem('primecash_backup_count')||'Auto');
+  set('dbStatusText', getSupabaseClient()?'Online':'Local');
+  set('dbUsersCount', pcSafeCount(db.users));
+  set('dbLoansCount', pcSafeCount(db.loans));
+  set('dbPayCount', pcSafeCount(db.payments));
+  set('dbSupCount', pcSafeCount(db.support));
+  const tp=document.getElementById('trashPreview');
+  if(tp)tp.innerHTML='<div class="row"><span>Proteção ativa</span><b class="greenText">Exclusões vão para lixeira</b></div><div class="row"><span>Tabela</span><b>lixeira</b></div><div class="row"><span>Restauração</span><b>Pelo Supabase</b></div>';
+  const tc=document.getElementById('tablesCoverage');
+  if(tc){
+    const tables=['usuarios','clientes','emprestimos','pagamentos','notificacoes','logs','logs_admin','lixeira','caixa','dashboard_historico','dispositivos','backups','suporte','premium_pedidos','configuracoes','recuperacao_senha'];
+    tc.innerHTML=tables.map(t=>`<div class="deployBox"><b>${t}</b><br><small>✅ Integrado ao Prime Cash</small></div>`).join('');
+  }
+}
+function abrirSupabase(){ window.open('https://supabase.com/dashboard/projects','_blank'); registrarAdminBanco('ATALHO_SUPABASE','Abriu Supabase'); }
+function abrirTabelaSupabase(tabela){ window.open('https://supabase.com/dashboard/projects','_blank'); registrarAdminBanco('ABRIU_TABELA_'+tabela,'Atalho para tabela '+tabela); }
+function baixarReadmeDeploy(){
+  const txt=`# Prime Cash Pro\n\nSistema financeiro Prime Cash com Supabase, Vercel, GitHub, PWA, PIX Premium, logs, lixeira, caixa, backup e deploy automático.\n\n## Como publicar\n1. Renomeie o arquivo para index.html\n2. Envie para o GitHub\n3. Conecte o repositório na Vercel\n4. Configure Supabase no painel Admin\n\n## Tabelas principais\nusuarios, clientes, emprestimos, pagamentos, notificacoes, logs, logs_admin, lixeira, caixa, dashboard_historico, dispositivos, backups, suporte, premium_pedidos, configuracoes, recuperacao_senha.\n`;
+  download('README.md',txt,'text/markdown');
+  registrarAdminBanco('README_DEPLOY_BAIXADO','Baixou README do projeto');
+}
+const _pcRenderAdminV62 = renderAdmin;
+renderAdmin = function(){ _pcRenderAdminV62(); atualizarPainelBancoTotal(); };
+const _pcMandarParaLixeiraV62 = mandarParaLixeira;
+mandarParaLixeira = async function(tabela,dados){
+  const n=Number(localStorage.getItem('primecash_lixeira_count')||0)+1;
+  localStorage.setItem('primecash_lixeira_count',String(n));
+  return _pcMandarParaLixeiraV62(tabela,dados);
+};
+const _pcSalvarBackupAutoV62 = salvarBackupAutomatico;
+salvarBackupAutomatico = async function(motivo='manual'){
+  const n=Number(localStorage.getItem('primecash_backup_count')||0)+1;
+  localStorage.setItem('primecash_backup_count',String(n));
+  return _pcSalvarBackupAutoV62(motivo);
+};
+window.addEventListener('load',()=>setTimeout(atualizarPainelBancoTotal,1200));
+
+
+/* === Prime Cash v7.3 - Banco/PIX protegido === */
+function pcHashPin(pin){try{return btoa(unescape(encodeURIComponent(String(pin||'')+'|primecash')))}catch(e){return String(pin||'')}}
+function getBancoPix(){try{return JSON.parse(localStorage.getItem('primecash_banco_pix')||'{}')}catch(e){return {}}}
+function setBancoPix(data){localStorage.setItem('primecash_banco_pix',JSON.stringify(data))}
+function preencherBancoPix(){
+  const b=getBancoPix();
+  const set=(id,v)=>{const el=document.getElementById(id); if(el)el.value=v||''};
+  set('bankName',b.bankName);set('bankOwner',b.bankOwner);set('bankPixKey',b.pixKey);set('bankPhone',b.phone);
+  const tp=document.getElementById('bankPixType'); if(tp&&b.pixType)tp.value=b.pixType;
+  const st=document.getElementById('bankPixStatus'); if(st)st.textContent=b.pixKey?'✅ Banco/PIX vinculado neste aparelho. Pronto para gerar cobranças.':'Nenhum banco/PIX vinculado ainda.';
+}
+async function salvarBancoPix(){
+  const bankName=(document.getElementById('bankName')?.value||'').trim();
+  const bankOwner=(document.getElementById('bankOwner')?.value||'').trim();
+  const pixType=(document.getElementById('bankPixType')?.value||'').trim();
+  const pixKey=(document.getElementById('bankPixKey')?.value||'').trim();
+  const phone=(document.getElementById('bankPhone')?.value||'').replace(/\D/g,'');
+  const pin=(document.getElementById('bankPin')?.value||'').trim();
+  if(!bankName||!bankOwner||!pixKey)return toast('Preencha banco, titular e chave PIX');
+  if(pin.length<4)return toast('Crie um PIN com pelo menos 4 números');
+  const data={bankName,bankOwner,pixType,pixKey,phone,pinHash:pcHashPin(pin),updatedAt:new Date().toISOString()};
+  setBancoPix(data);
+  db.config.pix=pixKey; save(); updatePixQr();
+  await sbConfigSet('banco_pix_vinculado', JSON.stringify({bankName,bankOwner,pixType,pixKey,phone,updatedAt:data.updatedAt}));
+  await sbTry('bancos_pix',{usuario:sbUserName(),banco:bankName,titular:bankOwner,tipo_chave:pixType,chave_pix:pixKey,telefone:phone,status:'ativo'});
+  await registrarAdminBanco('BANCO_PIX_VINCULADO',{bankName,bankOwner,pixType,phone});
+  preencherBancoPix();
+  toast('Banco/PIX vinculado com proteção');
+}
+function validarPinBanco(){
+  const b=getBancoPix();
+  const pin=(document.getElementById('chargePin')?.value||document.getElementById('bankPin')?.value||'').trim();
+  if(!b.pixKey){toast('Vincule uma chave PIX primeiro'); return false;}
+  if(!b.pinHash){toast('Crie o PIN do vínculo bancário'); return false;}
+  if(pcHashPin(pin)!==b.pinHash){toast('PIN incorreto'); return false;}
+  return true;
+}
+function montarTextoCobrancaPix(){
+  const b=getBancoPix();
+  const cliente=(document.getElementById('chargeClient')?.value||'Cliente').trim();
+  const valor=Number(document.getElementById('chargeValue')?.value||0);
+  const msg=(document.getElementById('chargeMessage')?.value||'Olá, segue o PIX para pagamento.').trim();
+  const valorTxt=valor>0?fmt(valor):'valor combinado';
+  return `${msg}\n\n💎 Prime Cash\nCliente: ${cliente}\nValor: ${valorTxt}\nBanco: ${b.bankName||'-'}\nTitular: ${b.bankOwner||'-'}\nChave PIX (${b.pixType||'PIX'}): ${b.pixKey||'-'}\n\nApós pagar, envie o comprovante.`;
+}
+async function gerarCobrancaPixProtegida(){
+  if(!validarPinBanco())return;
+  const b=getBancoPix();
+  const cliente=(document.getElementById('chargeClient')?.value||'Cliente').trim();
+  const valor=Number(document.getElementById('chargeValue')?.value||0);
+  const payload=`Prime Cash PIX | Cliente: ${cliente} | Valor: R$ ${valor.toFixed(2)} | Chave: ${b.pixKey} | Banco: ${b.bankName} | Titular: ${b.bankOwner}`;
+  const img=document.getElementById('bankChargeQr'); if(img)img.src='https://api.qrserver.com/v1/create-qr-code/?size=260x260&data='+encodeURIComponent(payload);
+  const text=document.getElementById('bankChargeText'); if(text)text.textContent=montarTextoCobrancaPix();
+  await sbTry('pix_cobrancas',{usuario:sbUserName(),cliente,valor,chave_pix:b.pixKey,status:'gerada',mensagem:montarTextoCobrancaPix()});
+  await registrarAdminBanco('PIX_COBRANCA_GERADA',{cliente,valor});
+  toast('Cobrança PIX gerada');
+}
+async function copiarPixVinculado(){
+  if(!validarPinBanco())return;
+  const texto=montarTextoCobrancaPix();
+  if(navigator.clipboard){await navigator.clipboard.writeText(texto); toast('Dados PIX copiados');}
+  else{prompt('Copie os dados PIX:',texto)}
+  await registrarAdminBanco('PIX_COPIADO_CELULAR','PIX vinculado copiado');
+}
+async function enviarPixWhatsApp(){
+  if(!validarPinBanco())return;
+  const b=getBancoPix();
+  const texto=montarTextoCobrancaPix();
+  await sbTry('pix_cobrancas',{usuario:sbUserName(),cliente:(document.getElementById('chargeClient')?.value||'Cliente'),valor:Number(document.getElementById('chargeValue')?.value||0),chave_pix:b.pixKey,status:'enviada',mensagem:texto});
+  await registrarAdminBanco('PIX_ENVIADO_WHATSAPP','Abriu envio de cobrança PIX');
+  if(navigator.share){try{await navigator.share({title:'Prime Cash PIX',text:texto});toast('Compartilhamento aberto');return}catch(e){}}
+  const phone=(b.phone||'').replace(/\D/g,'');
+  const url=phone?`https://wa.me/${phone}?text=${encodeURIComponent(texto)}`:`https://wa.me/?text=${encodeURIComponent(texto)}`;
+  window.open(url,'_blank');
+}
+function baixarSqlBancoPix(){
+  const sql=`create table if not exists bancos_pix (\n  id bigint generated by default as identity primary key,\n  created_at timestamptz default now(),\n  usuario text,\n  banco text,\n  titular text,\n  tipo_chave text,\n  chave_pix text,\n  telefone text,\n  status text default 'ativo'\n);\n\ncreate table if not exists pix_cobrancas (\n  id bigint generated by default as identity primary key,\n  created_at timestamptz default now(),\n  usuario text,\n  cliente text,\n  valor numeric default 0,\n  chave_pix text,\n  status text default 'gerada',\n  mensagem text\n);\n\nalter table bancos_pix disable row level security;\nalter table pix_cobrancas disable row level security;`;
+  download('primecash-banco-pix.sql',sql,'text/sql');
+}
+const _pcRenderAdminBancoPix = renderAdmin;
+renderAdmin = function(){ _pcRenderAdminBancoPix(); preencherBancoPix(); };
+window.addEventListener('load',()=>setTimeout(preencherBancoPix,1000));
+
+registerPWA();updatePrimeCashFooter();
+</script>
+</body>
+</html>
