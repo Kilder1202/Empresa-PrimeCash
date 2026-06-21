@@ -72,6 +72,19 @@
 .loanDateInfo{margin-top:10px;display:grid;gap:8px}
 .loanDateInfo span{display:block;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px;font-size:13px;font-weight:800;color:#dff0ff}
 .dateBtn{background:linear-gradient(135deg,#0f5132,#20e98a)!important;color:#03150d!important}
+
+
+/* Prime Cash - Versão Celular Premium para Vercel */
+.pc-mobile-install-card{display:none;margin:0 0 14px;padding:16px;border-radius:24px;background:linear-gradient(135deg,rgba(32,233,138,.15),rgba(7,27,54,.88));border:1px solid rgba(32,233,138,.42);box-shadow:0 18px 50px rgba(0,0,0,.25)}
+.pc-mobile-install-card h2{margin:0 0 8px;color:#dfffee;font-size:20px}.pc-mobile-install-card p{margin:0 0 12px;color:#bfe8d4;font-weight:800;line-height:1.45}.pc-mobile-install-actions{display:flex;gap:10px;flex-wrap:wrap}.pc-mobile-install-actions .btn{flex:1;min-width:135px}.pc-mobile-bottom-nav{display:none}.pc-mobile-top-pill{display:none}.pc-mobile-safe-space{height:0}
+@media(max-width:760px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+  body{background:radial-gradient(circle at 50% -10%,rgba(11,132,255,.34),transparent 34%),linear-gradient(180deg,#020712,#061225 48%,#020712)!important}
+  .login{padding:12px;place-items:start center}.loginShell{display:block;width:100%}.hero{min-height:auto;margin-bottom:12px;border-radius:26px;padding:20px}.hero h1{font-size:29px}.hero p{font-size:14px}.badges{gap:7px}.badge{font-size:11px;padding:8px 10px}.heroStats{grid-template-columns:1fr 1fr 1fr;gap:8px}.mini{padding:12px}.mini b{font-size:16px}.accessPanel{padding:18px;border-radius:26px}.accessCard{padding:18px;border-radius:20px}.accessCard .icon{width:56px;height:56px;font-size:30px}.accessCard h3{font-size:20px}.accessCard p{font-size:13px}
+  .app{display:block;min-height:100vh;padding-bottom:92px}.side{height:auto;position:sticky;top:0;z-index:35;border-radius:0 0 24px 24px;padding:12px 14px;background:rgba(5,17,35,.96);backdrop-filter:blur(18px);border-right:0;border-bottom:1px solid rgba(11,132,255,.35)}.sideBrand{font-size:18px;margin:0 0 8px}.profile{display:flex;align-items:center;gap:10px;text-align:left;margin:0;padding:10px 12px;border-radius:18px}.profile .avatar{width:44px;height:44px;font-size:24px;margin:0}.profile b{margin-top:0;font-size:14px}.profile span{font-size:11px}.side .nav{display:none}.secure{display:none}
+  .main{padding:12px 12px 0}.topbar{position:sticky;top:96px;z-index:28;padding:12px 14px;border-radius:20px;margin-bottom:12px;background:rgba(5,17,35,.92);backdrop-filter:blur(14px)}.topbar h1{font-size:21px}.topbar small{font-size:12px}.clock{font-size:12px;padding:8px 10px}.grid4,.grid3,.grid2,.bankPixGrid,.deployGrid,.dbHealth{display:grid!important;grid-template-columns:1fr!important;gap:12px!important}.metric{min-height:92px;border-radius:20px;padding:14px}.metric b{font-size:22px}.card{border-radius:22px;padding:15px}.banner{min-height:160px;padding-right:16px;padding-bottom:110px}.banner .mascot{right:14px;bottom:12px;width:82px;height:82px;font-size:48px}.row{align-items:flex-start}.btn{min-height:44px;border-radius:14px;padding:12px 13px}.btnRow{gap:8px}input,select,textarea{font-size:16px;min-height:46px;border-radius:14px}.modal{padding:12px}.modalBox{border-radius:24px;padding:18px}.tableWrap{margin:0 -4px;padding-bottom:6px}.tableWrap table{min-width:680px}.pc-update-footer{display:none}.footerLabel{display:none!important}.pc-browser-banner{bottom:88px;border-radius:20px}.pc-mobile-install-card{display:block}.pc-mobile-top-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,211,61,.35);background:rgba(255,211,61,.08);color:#ffe893;border-radius:999px;padding:7px 10px;font-weight:900;font-size:11px;margin-top:8px}.pc-mobile-bottom-nav{position:fixed;left:10px;right:10px;bottom:10px;z-index:95;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:8px;border-radius:24px;background:rgba(2,7,18,.94);border:1px solid rgba(11,132,255,.36);box-shadow:0 18px 55px rgba(0,0,0,.55),0 0 24px rgba(11,132,255,.12);backdrop-filter:blur(18px)}.pc-mobile-bottom-nav button{border:0;background:transparent;color:#bcd4f4;border-radius:17px;min-height:56px;font-size:10px;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.pc-mobile-bottom-nav button b{font-size:19px;line-height:1}.pc-mobile-bottom-nav button.active{background:linear-gradient(135deg,rgba(11,132,255,.28),rgba(32,233,138,.16));color:#fff;border:1px solid rgba(32,233,138,.38)}.pc-mobile-bottom-nav button.danger{color:#ff9aa4}.pc-mobile-safe-space{height:92px}
+}
+
 </style>
 </head>
 <body>
@@ -263,6 +276,10 @@
 
   </main>
 </div>
+
+<div id="pcMobileBottomNav" class="pc-mobile-bottom-nav" aria-label="Menu celular"></div>
+<div class="pc-mobile-safe-space"></div>
+
 <div class="footerLabel hidden" id="footerLabel"></div>
 <footer class="pc-update-footer" id="pcUpdateFooter">
   <div>
@@ -774,6 +791,57 @@ renderUser = function(){
   uPaymentsList.innerHTML=db.payments.filter(p=>p.userId===current.id).map(p=>`<div class="row"><span>${p.date}</span><b>${fmt(p.value)}</b></div>`).join('')||'<p>Nenhum pagamento registrado.</p>';profName.value=current.name;profUser.value=current.username;profEmail.value=current.email;profPhone.value=current.phone||'';uSupportList.innerHTML=db.support.filter(s=>s.userId===current.id).map(s=>`<div class="row"><span>${s.msg}</span>${statusPill(s.status)}</div>`).join('')||'<p>Sem mensagens.</p>';renderPremiumStatusCard();updatePixQr();save();
 };
 window.addEventListener('load',()=>{setTimeout(()=>{const f=document.getElementById('noteLoanDate'); if(f&&!f.value)f.value=new Date().toISOString().slice(0,10);},500)});
+
+
+/* Prime Cash - Navegação e instalação Mobile */
+let pcMobileLastPage='';
+function pcIsMobile(){return window.matchMedia('(max-width:760px)').matches||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)}
+function pcInstallAppNow(){
+  const btn=document.getElementById('pcInstallBtn');
+  if(btn){btn.click();return}
+  toast('No Chrome Android: menu ⋮ > Adicionar à tela inicial.');
+}
+function pcMobileItems(){
+  if(!current)return [];
+  if(current.role==='admin')return [['aDashboard','🏠','Início'],['aLoans','💰','Emprést.'],['aBancoPix','🏦','PIX'],['aDatabase','🗄️','Banco'],['aSettings','⚙️','Config']];
+  return [['uDashboard','🏠','Início'],['uLoans','💸','Emprést.'],['uRequest','➕','Anotar'],['uPlanos','👑','Plano'],['uProfile','👤','Perfil']];
+}
+function pcRenderMobileNav(activeId){
+  const box=document.getElementById('pcMobileBottomNav');
+  if(!box||!current)return;
+  const items=pcMobileItems();
+  box.innerHTML=items.map(i=>`<button class="${(activeId||pcMobileLastPage)===i[0]?'active':''}" onclick="openPage('${i[0]}');pcRenderMobileNav('${i[0]}')"><b>${i[1]}</b><span>${i[2]}</span></button>`).join('')+`<button class="danger" onclick="logout()"><b>🚪</b><span>Sair</span></button>`;
+}
+function pcMobileInstallCard(){
+  if(document.getElementById('pcMobileInstallCard'))return;
+  const dash=document.getElementById('uDashboard');
+  if(!dash)return;
+  const card=document.createElement('div');
+  card.id='pcMobileInstallCard';
+  card.className='pc-mobile-install-card';
+  card.innerHTML=`<h2>📱 Baixar Prime Cash no celular</h2><p>Instale na tela inicial e use como aplicativo, com tela cheia e acesso rápido.</p><div class="pc-mobile-install-actions"><button class="btn green" onclick="pcInstallAppNow()">Instalar App</button><button class="btn dark" onclick="installInfo()">Como instalar</button></div><span class="pc-mobile-top-pill">✅ Versão celular ativa</span>`;
+  dash.prepend(card);
+}
+function pcApplyMobileEnhancements(){
+  pcMobileInstallCard();
+  document.body.classList.toggle('pc-mobile-mode',pcIsMobile());
+  const viewport=document.querySelector('meta[name="viewport"]');
+  if(viewport)viewport.setAttribute('content','width=device-width, initial-scale=1.0, viewport-fit=cover');
+  pcRenderMobileNav(pcMobileLastPage);
+}
+const pcOldOpenPage=openPage;
+openPage=function(id,btn){
+  pcMobileLastPage=id;
+  pcOldOpenPage(id,btn);
+  pcRenderMobileNav(id);
+}
+const pcOldRenderApp=renderApp;
+renderApp=function(){
+  pcOldRenderApp();
+  pcApplyMobileEnhancements();
+}
+window.addEventListener('resize',pcApplyMobileEnhancements);
+window.addEventListener('load',()=>setTimeout(pcApplyMobileEnhancements,700));
 
 registerPWA();updatePrimeCashFooter();
 </script>
